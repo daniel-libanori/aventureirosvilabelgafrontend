@@ -4,7 +4,8 @@ import {
 } from "react-router-dom";
 import { ChakraProvider } from '@chakra-ui/react'
 
-import { Login, Error, Books} from './views'
+import { Login, Error, Books, Chapters} from './views'
+import { GlobalProvider } from "./context/globalState";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
     element: <Books/>,
     errorElement: <Error/>,
   },
+  {
+    path: "/chapters",
+    element: <Chapters/>,
+    errorElement: <Error/>
+  }
 
 ]);
 
@@ -29,9 +35,11 @@ function App() {
 
   return (
     <>
-      <ChakraProvider>
-        <RouterProvider router={router} />
-      </ChakraProvider>
+      <GlobalProvider>
+        <ChakraProvider>
+          <RouterProvider router={router} />
+        </ChakraProvider>
+      </GlobalProvider>
     </>
   );
 }
