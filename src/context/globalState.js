@@ -46,6 +46,20 @@ export const GlobalProvider = ({children}) => {
         })
         save()
     }
+
+    const addNewChapter = (bookId, mapId, chapterName) => {
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(bookId)
+
+        globalState.books[bookId].chapters.push({
+            id: globalState.books[bookId].chapters.length + 1,
+            chapter_name: chapterName,
+            introduction: '',
+            map_id: mapId,
+            exploration_points: []
+        })
+
+        save()
+    }
     
 
     const save = ()=>{
@@ -63,6 +77,7 @@ export const GlobalProvider = ({children}) => {
         <GlobalContext.Provider value={{
             addNewBook,
             getBooks,
+            addNewChapter,
             load
         }}>
             {children}

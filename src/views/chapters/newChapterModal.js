@@ -10,16 +10,20 @@ import {
 } from '@chakra-ui/react'
 import { useContext, useState } from 'react';
 import { GlobalContext } from '../../context/globalState';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 export function NewChapterModal({ isOpen, onOpen, onClose }) {
 
-    const {addNewBook} = useContext(GlobalContext)
+    const {addNewChapter} = useContext(GlobalContext)
     const [creationStep, setCreationStep] = useState(1)
     const [chapterName, setChapterName] = useState('')
+    const [map, setMap] = useState('1')
+    const { bookId } = useParams()
+    const navigate = useNavigate()
 
     const onCreatePress = () => {
-        
+        addNewChapter(bookId,map, chapterName)        
 
 
 
@@ -50,7 +54,11 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
                             <Text mt={5}>
                                 Qual será o mapa desse capítulo?
                             </Text>
-                            <Select placeholder='Escolha o Mapa'>
+                            <Select 
+                                placeholder='Escolha o Mapa'
+                                value={map}
+                                onChange={(e)=>setMap(e.target.value)}
+                            >
                                 <option value='1'>Museu</option>
                             </Select>
                         </>
