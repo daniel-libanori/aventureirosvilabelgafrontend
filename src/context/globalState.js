@@ -32,7 +32,7 @@ export const GlobalContext = createContext(initialState)
 
 export const GlobalProvider = ({children}) => {
 
-    const [globalState, ] = useState(initialState)
+    const [globalState, setGlobalState] = useState(initialState)
 
     const getBooks = ()=>{
         return globalState.books
@@ -44,14 +44,25 @@ export const GlobalProvider = ({children}) => {
             book_name: bookName,
             chapters:[ ]
         })
-        
+        save()
     }
 
+    const save = ()=>{
+        localStorage.setItem("AventureirosVilaBelga", JSON.stringify(globalState))
+    }
+
+    const load = () => {
+        const localStorageLoad = localStorage.getItem("AventureirosVilaBelga")
+        if(!!localStorageLoad){
+            setGlobalState(JSON.parse(localStorageLoad))    
+        }
+    }
 
     return(
         <GlobalContext.Provider value={{
             addNewBook,
-            getBooks
+            getBooks,
+            load
         }}>
             {children}
         </GlobalContext.Provider>

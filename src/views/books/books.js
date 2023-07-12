@@ -4,14 +4,18 @@ import {
 } from '@chakra-ui/react'
 import { NewBookModal } from './newBookModal';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useLayoutEffect } from 'react';
 import { GlobalContext } from '../../context/globalState';
 
 
 export function Books() {
     const { isOpen, onOpen, onClose } = useDisclosure() //NewBookModal
     const navigate = useNavigate()
-    const { getBooks } = useContext(GlobalContext)
+    const { getBooks, load } = useContext(GlobalContext)
+
+    useLayoutEffect(()=>{
+        load()
+    },[])
 
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
