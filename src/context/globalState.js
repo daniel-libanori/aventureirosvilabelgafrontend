@@ -40,12 +40,13 @@ export const GlobalProvider = ({children}) => {
 
     const addNewBook = (bookName) => {
         globalState.books.push({
-            id: globalState.books.length,
+            id: globalState.books.length + 1,
             book_name: bookName,
             chapters:[ ]
         })
         save()
     }
+    
 
     const save = ()=>{
         localStorage.setItem("AventureirosVilaBelga", JSON.stringify(globalState))

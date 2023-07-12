@@ -15,13 +15,14 @@ import { useNavigate } from 'react-router-dom';
 
 export function NewBookModal({ isOpen, onOpen, onClose }) {
 
-    const {addNewBook} = useContext(GlobalContext)
+    const {addNewBook, getBooks} = useContext(GlobalContext)
     const [bookName, setBookName] = useState('')
     const navigate = useNavigate()
 
     const onCreatePress = () => {
         addNewBook(bookName)
-        navigate("/chapters")
+        const books = getBooks()
+        navigate(`/${books.length}/chapters`)
     }
 
     return (

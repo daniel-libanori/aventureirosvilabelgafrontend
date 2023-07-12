@@ -38,7 +38,7 @@ export function Books() {
 
                         <Flex direction='column'>
                             {getBooks().map((book,index) =>
-                                <Card key={index} onClick={()=>navigate("/chapters")} 
+                                <Card key={index} onClick={()=>navigate(`/${book.id}/chapters`)} 
                                     w="600px" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px' ml='15px'>
                                     <Image src='https://images.pexels.com/photos/13650913/pexels-photo-13650913.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' w='130px' h='100px' ml='15px' />
                                     <Flex direction='column' ml='15px'>
