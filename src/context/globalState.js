@@ -38,6 +38,12 @@ export const GlobalProvider = ({children}) => {
         return globalState.books
     }
 
+    const getChapters = (bookId)=>{
+        load()
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
+        return globalState.books[bookIndex].chapters
+    }
+
     const addNewBook = (bookName) => {
         globalState.books.push({
             id: globalState.books.length + 1,
@@ -48,10 +54,11 @@ export const GlobalProvider = ({children}) => {
     }
 
     const addNewChapter = (bookId, mapId, chapterName) => {
-        const bookIndex = globalState.books.map(e=>e.id).indexOf(bookId)
+        load()
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
 
-        globalState.books[bookId].chapters.push({
-            id: globalState.books[bookId].chapters.length + 1,
+        globalState.books[bookIndex].chapters.push({
+            id: globalState.books[bookIndex].chapters.length + 1,
             chapter_name: chapterName,
             introduction: '',
             map_id: mapId,
@@ -77,6 +84,7 @@ export const GlobalProvider = ({children}) => {
         <GlobalContext.Provider value={{
             addNewBook,
             getBooks,
+            getChapters,
             addNewChapter,
             load
         }}>

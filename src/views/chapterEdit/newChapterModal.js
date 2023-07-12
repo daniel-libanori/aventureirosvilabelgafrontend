@@ -15,7 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export function NewChapterModal({ isOpen, onOpen, onClose }) {
 
-    const {addNewChapter, getChapters} = useContext(GlobalContext)
+    const {addNewChapter} = useContext(GlobalContext)
     const [creationStep, setCreationStep] = useState(1)
     const [chapterName, setChapterName] = useState('')
     const [map, setMap] = useState('1')
@@ -23,9 +23,10 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
     const navigate = useNavigate()
 
     const onCreatePress = () => {
-        addNewChapter(bookId,map, chapterName) 
-        const newChapterId = getChapters(bookId).map(e=>e.id).indexOf(getChapters(bookId).length)
-        navigate(`/${bookId}/chapters/${newChapterId}`)
+        addNewChapter(bookId,map, chapterName)        
+
+
+
     }
 
     return (
