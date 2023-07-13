@@ -68,9 +68,9 @@ export function ChapterEdit() {
                                                             "rgba(255,255,0,0.4)": null}
                                                 onClick={()=>setSelectedMapPart({x:rowIdx,y:columnIdx})}
                                             >
-                                                { item.points.length > 0 &&
+                                                { item?.points?.length > 0 &&
                                                     <Flex bg="rgba(255,0,0,0.7)" w={16} h={16} justify="center" align="center" borderRadius={40}>
-                                                        <Text fontSize={40} textAlign="center">{item.points.length}</Text>
+                                                        <Text fontSize={40} textAlign="center">{item?.points?.length}</Text>
                                                     </Flex>
                                                 }
                                             </Flex>
@@ -90,8 +90,16 @@ export function ChapterEdit() {
                                     ))} 
                                 </Flex>
                             </Flex>
-                        </Flex>
 
+                            <Flex w={600} h={"auto"} direction="column" border="1px solid black" m={5} mb={10}> 
+                                {!!selectedMapPart && mapMatrix[selectedMapPart.x][selectedMapPart.y].points.map(e=>(
+                                    <Flex key={e.id} border="1px solid black" borderRadius={10} m={5}>
+                                        <Text fontSize={25} p={5}>{e.name}</Text>
+                                    </Flex>
+                                ))}
+                            </Flex>
+
+                        </Flex>
 
                     </Flex>
 
