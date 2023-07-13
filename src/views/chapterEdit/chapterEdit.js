@@ -6,6 +6,7 @@ import { IntroductionModal } from './introductionModal';
 import { useContext, useLayoutEffect, useState } from 'react';
 import { GlobalContext } from '../../context/globalState';
 import { useParams } from 'react-router-dom';
+import { returnMissingNumberOrNext } from '../../utils/arrFunctions';
 
 const mapMatrixInit = [
     [[],[],[],[],[]],
@@ -18,17 +19,13 @@ const mapMatrixInit = [
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
     const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
-    const [ explorationPointsArr, setExplorationPointsArr ] = useState([])
     const { bookId, chapterId } = useParams()
     const [ selectedMapPart, setSelectedMapPart ] = useState()
     const { getExplorationPoints } = useContext(GlobalContext)
 
 
-
     useLayoutEffect(()=>{
-        setExplorationPointsArr(getExplorationPoints(bookId, chapterId))
-
-        explorationPointsArr.map(point=>mapMatrix[point.y][point.x].push(point))
+        setMapMatrix(getExplorationPoints(bookId, chapterId))
     },[])
 
 
@@ -51,29 +48,48 @@ export function ChapterEdit() {
                             </Flex>
                         </Card>
 
-                        <Flex direction="row" position="relative">
+
+                        <Flex direction="row">
+                            <Flex direction="column" mt={5}>
+                                {[1,2,3,4,5].map(e=>(
+                                    <Flex key={e} w={10} h={119} justify="flex-end"  align="center">
+                                        <Text fontSize={30} fontWeight="700" >{e}</Text>
+                                    </Flex>
+                                ))}
+                            </Flex>
                             
-                            <Flex h={600} w={600} m={5} wrap="wrap">
-                                { mapMatrix.map((row, rowIdx) => row.map((item, columnIdx) =>(
-                                    <Flex h={119} w={119} border="1px solid black" key={`${rowIdx}${columnIdx}`} 
-                                        zIndex={2} align="center" justify="center"
-                                        bgColor={selectedMapPart?.x === rowIdx && selectedMapPart?.y === columnIdx ?
-                                                    "rgba(255,255,0,0.4)": null}
-                                        onClick={()=>setSelectedMapPart({x:rowIdx,y:columnIdx})}
-                                    >
-                                        { item.length > 0 &&
-                                            <Flex bg="rgba(255,0,0,0.7)" w={16} h={16} justify="center" align="center" borderRadius={40}>
-                                                <Text fontSize={40} textAlign="center">{item.length}</Text>
+                            <Flex direction="column">
+                                <Flex position="relative">
+                                    <Flex h={600} w={600} m={5} wrap="wrap">
+                                        { mapMatrix.map((row, rowIdx) => row.map((item, columnIdx) =>(
+                                            <Flex h={119} w={119} border="1px solid black" key={`${rowIdx}${columnIdx}`} 
+                                                zIndex={2} align="center" justify="center"
+                                                bgColor={selectedMapPart?.x === rowIdx && selectedMapPart?.y === columnIdx ?
+                                                            "rgba(255,255,0,0.4)": null}
+                                                onClick={()=>setSelectedMapPart({x:rowIdx,y:columnIdx})}
+                                            >
+                                                { item.points.length > 0 &&
+                                                    <Flex bg="rgba(255,0,0,0.7)" w={16} h={16} justify="center" align="center" borderRadius={40}>
+                                                        <Text fontSize={40} textAlign="center">{item.points.length}</Text>
+                                                    </Flex>
+                                                }
                                             </Flex>
+                                        )))
+
+
+
                                         }
                                     </Flex>
-                                )))
-
-
-
-                                }
+                                    <Image src='https://dicegrimorium.com/wp-content/uploads/2022/09/ForestGatesVol2Thumb.jpg' position="absolute" w={600} h={600} m={5}/>
+                                </Flex>
+                                <Flex mt={-5} ml={5}>
+                                    {["A","B","C","D","E"].map(e=>(
+                                        <Flex key={e} w={119} h={10} justify="center" align="center" >
+                                            <Text fontSize={30} fontWeight="700" >{e}</Text>
+                                        </Flex>
+                                    ))} 
+                                </Flex>
                             </Flex>
-                            <Image src='https://dicegrimorium.com/wp-content/uploads/2022/09/ForestGatesVol2Thumb.jpg' position="absolute" w={600} h={600} m={5}/>
                         </Flex>
 
 

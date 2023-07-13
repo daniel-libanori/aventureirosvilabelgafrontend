@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-
+import { returnMissingNumberOrNext} from '../utils/arrFunctions'
 
 const initialState = {
     books: [
@@ -12,13 +12,14 @@ const initialState = {
                     chapter_name: 'Chapter 1',
                     introduction: '',
                     map_id: 1,
-                    exploration_points: [
-                        {
-                            x: 1,
-                            y: 1,
-                            name: 'First Exploration Point'
-                        }
-                    ]
+                    exploration_points: 
+                        [
+                            [{x:0, y:0, points:[]},{x:0, y:1, points:[]},{x:0, y:2, points:[]},{x:0, y:3, points:[]},{x:0, y:4, points:[]}],
+                            [{x:1, y:0, points:[]},{x:1, y:1, points:[]},{x:1, y:2, points:[]},{x:1, y:3, points:[]},{x:1, y:4, points:[]}],
+                            [{x:2, y:0, points:[]},{x:2, y:1, points:[]},{x:2, y:2, points:[]},{x:2, y:3, points:[]},{x:2, y:4, points:[]}],
+                            [{x:3, y:0, points:[]},{x:3, y:1, points:[]},{x:3, y:2, points:[]},{x:3, y:3, points:[]},{x:3, y:4, points:[]}],
+                            [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[]},{x:4, y:4, points:[{id:1,name:'test exp point', text:""}]}],
+                        ]
                 }
             ]
 
