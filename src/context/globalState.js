@@ -68,6 +68,16 @@ export const GlobalProvider = ({children}) => {
         save()
     }
     
+    const addChapterIntroduction = (bookId, chapterId, introductionText) => {
+        load()
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
+        const chapterIndex = globalState.books[bookIndex].chapters
+                                .map(e=>e.id).indexOf(parseInt(chapterId))
+
+        globalState.books[bookIndex].chapters[chapterIndex].introduction =  introductionText
+        
+        save()
+    }
 
     const save = ()=>{
         localStorage.setItem("AventureirosVilaBelga", JSON.stringify(globalState))
@@ -86,6 +96,7 @@ export const GlobalProvider = ({children}) => {
             getBooks,
             getChapters,
             addNewChapter,
+            addChapterIntroduction,
             load
         }}>
             {children}
