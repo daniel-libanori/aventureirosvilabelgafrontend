@@ -44,6 +44,14 @@ export const GlobalProvider = ({children}) => {
         return globalState.books[bookIndex].chapters
     }
 
+    const getExplorationPoints = (bookId, chapterId)=>{
+        load()
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
+        const chapterIndex = globalState.books[bookIndex].chapters.map(e=>e.id).indexOf(parseInt(chapterId))
+
+        return globalState.books[bookIndex].chapters[chapterIndex].exploration_points
+    }
+
     const addNewBook = (bookName) => {
         globalState.books.push({
             id: globalState.books.length + 1,
@@ -97,6 +105,7 @@ export const GlobalProvider = ({children}) => {
             getChapters,
             addNewChapter,
             addChapterIntroduction,
+            getExplorationPoints,
             load
         }}>
             {children}

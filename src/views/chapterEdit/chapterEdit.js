@@ -1,12 +1,36 @@
-import { Card, Flex, Text } from '@chakra-ui/react'
+import { Card, Flex, Image, Text } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
 import { IntroductionModal } from './introductionModal';
+import { useContext, useLayoutEffect, useState } from 'react';
+import { GlobalContext } from '../../context/globalState';
+import { useParams } from 'react-router-dom';
 
+const mapMatrixInit = [
+    [[],[],[],[],[]],
+    [[],[],[],[],[]],
+    [[],[],[],[],[]],
+    [[],[],[],[],[]],
+    [[],[],[],[],[]],
+]
 
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
+    const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
+    const [ explorationPointsArr, setExplorationPointsArr ] = useState([])
+    const { bookId, chapterId } = useParams()
+    const [ selectedMapPart, setSelectedMapPart ] = useState()
+    const { getExplorationPoints } = useContext(GlobalContext)
+
+
+
+    useLayoutEffect(()=>{
+        setExplorationPointsArr(getExplorationPoints(bookId, chapterId))
+
+        explorationPointsArr.map(point=>mapMatrix[point.y][point.x].push(point))
+    },[])
+
 
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
@@ -27,7 +51,30 @@ export function ChapterEdit() {
                             </Flex>
                         </Card>
 
+                        <Flex direction="row" position="relative">
+                            
+                            <Flex h={600} w={600} m={5} wrap="wrap">
+                                { mapMatrix.map((row, rowIdx) => row.map((item, columnIdx) =>(
+                                    <Flex h={119} w={119} border="1px solid black" key={`${rowIdx}${columnIdx}`} 
+                                        zIndex={2} align="center" justify="center"
+                                        bgColor={selectedMapPart?.x === rowIdx && selectedMapPart?.y === columnIdx ?
+                                                    "rgba(255,255,0,0.4)": null}
+                                        onClick={()=>setSelectedMapPart({x:rowIdx,y:columnIdx})}
+                                    >
+                                        { item.length > 0 &&
+                                            <Flex bg="rgba(255,0,0,0.7)" w={16} h={16} justify="center" align="center" borderRadius={40}>
+                                                <Text fontSize={40} textAlign="center">{item.length}</Text>
+                                            </Flex>
+                                        }
+                                    </Flex>
+                                )))
 
+
+
+                                }
+                            </Flex>
+                            <Image src='https://dicegrimorium.com/wp-content/uploads/2022/09/ForestGatesVol2Thumb.jpg' position="absolute" w={600} h={600} m={5}/>
+                        </Flex>
 
 
                     </Flex>
