@@ -37,7 +37,8 @@ export function ChapterEdit() {
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
             <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-            <AddExplorationPointModal isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} />
+            <AddExplorationPointModal x={selectedMapPart?.x} y={selectedMapPart?.y}
+                isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} />
 
             <Card w="80%" h="90%" mt="5vh" mb="5vh">
                 <Flex direction='column' align="center" justify='space-evenly' h="100%">
@@ -102,10 +103,15 @@ export function ChapterEdit() {
                                         <Text fontSize={25} p={5}>{e.name}</Text>
                                     </Flex>
                                 ))}
-                                <Flex border="1px dashed black" onClick={onOpenExpPoint}
-                                    borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
-                                    <Text fontSize={25} p={5}>Add New Exploration Point</Text>
-                                </Flex>
+                                { !!selectedMapPart &&
+                                    <Flex border="1px dashed black" onClick={onOpenExpPoint}
+                                        borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
+                                        <Text fontSize={25} p={5}>Add New Exploration Point</Text>
+                                    </Flex>
+                                }
+                                {!selectedMapPart &&
+                                    <Text>Selecione um ponto do mapa</Text>
+                                }
 
                             </Flex>
 

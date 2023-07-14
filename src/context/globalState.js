@@ -18,7 +18,7 @@ const initialState = {
                             [{x:1, y:0, points:[]},{x:1, y:1, points:[]},{x:1, y:2, points:[]},{x:1, y:3, points:[]},{x:1, y:4, points:[]}],
                             [{x:2, y:0, points:[]},{x:2, y:1, points:[]},{x:2, y:2, points:[]},{x:2, y:3, points:[]},{x:2, y:4, points:[]}],
                             [{x:3, y:0, points:[]},{x:3, y:1, points:[]},{x:3, y:2, points:[]},{x:3, y:3, points:[]},{x:3, y:4, points:[]}],
-                            [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[{id:1,name:'test exp point', text:""},{id:2,name:'test exp point2', text:""}]},{x:4, y:4, points:[]}],
+                            [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[{id:1,name:'test exp point', text:"", unlock:[{id:2,x:4,y:3}]},{id:2,name:'test exp point2', text:"", unlock:[]}]},{x:4, y:4, points:[]}],
                         ]
                 }
             ]
@@ -59,7 +59,7 @@ export const GlobalProvider = ({children}) => {
         const chapterIndex = globalState.books[bookIndex].chapters.map(e=>e.id).indexOf(parseInt(chapterId))
 
         const expPointsArray = []
-        
+
         globalState.books[bookIndex]?.chapters[chapterIndex]?.exploration_points.map(row=>row.map(item=>{
             if(item.points.length>0){
                 item.points.map(point=>{
@@ -127,17 +127,17 @@ export const GlobalProvider = ({children}) => {
         save()
     }
 
-    const addNewExplorationPoint = (bookId, chapterId, x, y, name, text) => {
+    const addNewExplorationPoint = (bookId, chapterId, x, y, name, text, unlock) => {
         load()
         const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
         const chapterIndex = globalState.books[bookIndex].chapters
                                 .map(e=>e.id).indexOf(parseInt(chapterId))
 
-        
-        globalState.books[bookIndex].chapters[chapterIndex].exploration_points.push({
+        globalState.books[bookIndex].chapters[chapterIndex].exploration_points[x][y].points.push({
             id:returnMissingNumberOrNext(globalState.books[bookIndex].chapters[chapterIndex].exploration_points[x][y].points.map(e=>e.id)),
             name: name,
-            text: text
+            text: text,
+            unlock:[ ...unlock.map(p=>({id:p.id, x:p.x, y:p.y}))]
         })
 
         save()
