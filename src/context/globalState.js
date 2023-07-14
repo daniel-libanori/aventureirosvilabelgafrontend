@@ -50,7 +50,27 @@ export const GlobalProvider = ({children}) => {
         const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
         const chapterIndex = globalState.books[bookIndex].chapters.map(e=>e.id).indexOf(parseInt(chapterId))
 
-        return globalState.books[bookIndex].chapters[chapterIndex].exploration_points
+        return globalState.books[bookIndex]?.chapters[chapterIndex]?.exploration_points
+    }
+
+    const getExplorationPointsArray = (bookId, chapterId)=>{
+        load()
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
+        const chapterIndex = globalState.books[bookIndex].chapters.map(e=>e.id).indexOf(parseInt(chapterId))
+
+        const expPointsArray = []
+        
+        globalState.books[bookIndex]?.chapters[chapterIndex]?.exploration_points.map(row=>row.map(item=>{
+            if(item.points.length>0){
+                item.points.map(point=>{
+                    expPointsArray.push({...point, x: item.x, y: item.y})
+                })
+
+            }
+
+        }))
+        
+        return expPointsArray
     }
 
     const addNewBook = (bookName) => {
@@ -71,10 +91,29 @@ export const GlobalProvider = ({children}) => {
             chapter_name: chapterName,
             introduction: '',
             map_id: mapId,
-            exploration_points: []
+            exploration_points: [
+                [{x:0, y:0, points:[]},{x:0, y:1, points:[]},{x:0, y:2, points:[]},{x:0, y:3, points:[]},{x:0, y:4, points:[]}],
+                [{x:1, y:0, points:[]},{x:1, y:1, points:[]},{x:1, y:2, points:[]},{x:1, y:3, points:[]},{x:1, y:4, points:[]}],
+                [{x:2, y:0, points:[]},{x:2, y:1, points:[]},{x:2, y:2, points:[]},{x:2, y:3, points:[]},{x:2, y:4, points:[]}],
+                [{x:3, y:0, points:[]},{x:3, y:1, points:[]},{x:3, y:2, points:[]},{x:3, y:3, points:[]},{x:3, y:4, points:[]}],
+                [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[]},{x:4, y:4, points:[]}],
+            ]
         })
 
         save()
+        return({
+            id: globalState.books[bookIndex].chapters.length,
+            chapter_name: chapterName,
+            introduction: '',
+            map_id: mapId,
+            exploration_points: [
+                [{x:0, y:0, points:[]},{x:0, y:1, points:[]},{x:0, y:2, points:[]},{x:0, y:3, points:[]},{x:0, y:4, points:[]}],
+                [{x:1, y:0, points:[]},{x:1, y:1, points:[]},{x:1, y:2, points:[]},{x:1, y:3, points:[]},{x:1, y:4, points:[]}],
+                [{x:2, y:0, points:[]},{x:2, y:1, points:[]},{x:2, y:2, points:[]},{x:2, y:3, points:[]},{x:2, y:4, points:[]}],
+                [{x:3, y:0, points:[]},{x:3, y:1, points:[]},{x:3, y:2, points:[]},{x:3, y:3, points:[]},{x:3, y:4, points:[]}],
+                [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[]},{x:4, y:4, points:[]}],
+            ]
+        })
     }
     
     const addChapterIntroduction = (bookId, chapterId, introductionText) => {
@@ -86,6 +125,23 @@ export const GlobalProvider = ({children}) => {
         globalState.books[bookIndex].chapters[chapterIndex].introduction =  introductionText
         
         save()
+    }
+
+    const addNewExplorationPoint = (bookId, chapterId, x, y, name, text) => {
+        load()
+        const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
+        const chapterIndex = globalState.books[bookIndex].chapters
+                                .map(e=>e.id).indexOf(parseInt(chapterId))
+
+        
+        globalState.books[bookIndex].chapters[chapterIndex].exploration_points.push({
+            id:returnMissingNumberOrNext(globalState.books[bookIndex].chapters[chapterIndex].exploration_points[x][y].points.map(e=>e.id)),
+            name: name,
+            text: text
+        })
+
+        save()
+
     }
 
     const save = ()=>{
@@ -107,7 +163,10 @@ export const GlobalProvider = ({children}) => {
             addNewChapter,
             addChapterIntroduction,
             getExplorationPoints,
-            load
+            load,
+            addNewExplorationPoint,
+            getExplorationPointsArray,
+            globalState
         }}>
             {children}
         </GlobalContext.Provider>

@@ -1,4 +1,8 @@
 export function returnMissingNumberOrNext(array) {
+    if(array.length === 0 ){
+      return 1
+    }
+  
     array.sort((a, b) => {
       return a - b;
     });

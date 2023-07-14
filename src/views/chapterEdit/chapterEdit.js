@@ -7,38 +7,41 @@ import { useContext, useLayoutEffect, useState } from 'react';
 import { GlobalContext } from '../../context/globalState';
 import { useParams } from 'react-router-dom';
 import { returnMissingNumberOrNext } from '../../utils/arrFunctions';
+import { AddExplorationPointModal } from './addExplorationPointModal';
 
 const mapMatrixInit = [
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
-    [[],[],[],[],[]],
+    [{x:0, y:0, points:[]},{x:0, y:1, points:[]},{x:0, y:2, points:[]},{x:0, y:3, points:[]},{x:0, y:4, points:[]}],
+    [{x:1, y:0, points:[]},{x:1, y:1, points:[]},{x:1, y:2, points:[]},{x:1, y:3, points:[]},{x:1, y:4, points:[]}],
+    [{x:2, y:0, points:[]},{x:2, y:1, points:[]},{x:2, y:2, points:[]},{x:2, y:3, points:[]},{x:2, y:4, points:[]}],
+    [{x:3, y:0, points:[]},{x:3, y:1, points:[]},{x:3, y:2, points:[]},{x:3, y:3, points:[]},{x:3, y:4, points:[]}],
+    [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[]},{x:4, y:4, points:[]}],
 ]
 
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
+    const { isOpen: isOpenExpPoint, onOpen: onOpenExpPoint , onClose: onCloseExpPoint } = useDisclosure() //IntroductionModal
     const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
     const { bookId, chapterId } = useParams()
     const [ selectedMapPart, setSelectedMapPart ] = useState()
-    const { getExplorationPoints } = useContext(GlobalContext)
+    const { getExplorationPoints,globalState } = useContext(GlobalContext)
+    const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
 
 
     useLayoutEffect(()=>{
         setMapMatrix(getExplorationPoints(bookId, chapterId))
-    },[])
+    },[ globalState.books[bookIndex]?.chapters.length,
+        globalState.books[bookIndex]?.chapters[chapterId]?.exploration_points.length])
 
 
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
             <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-
+            <AddExplorationPointModal isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} />
 
             <Card w="80%" h="90%" mt="5vh" mb="5vh">
                 <Flex direction='column' align="center" justify='space-evenly' h="100%">
                     <Text fontSize='8xl'>Chapter Edit</Text>
-
                     <Flex direction="column" w="100%">
 
                         <Card onClick={onOpen}
@@ -60,8 +63,8 @@ export function ChapterEdit() {
                             
                             <Flex direction="column">
                                 <Flex position="relative">
-                                    <Flex h={600} w={600} m={5} wrap="wrap">
-                                        { mapMatrix.map((row, rowIdx) => row.map((item, columnIdx) =>(
+                                    <Flex h={600} w={600} m={5} wrap="wrap" zIndex={2}>
+                                        { mapMatrix?.map((row, rowIdx) => row?.map((item, columnIdx) =>(
                                             <Flex h={119} w={119} border="1px solid black" key={`${rowIdx}${columnIdx}`} 
                                                 zIndex={2} align="center" justify="center"
                                                 bgColor={selectedMapPart?.x === rowIdx && selectedMapPart?.y === columnIdx ?
@@ -80,7 +83,9 @@ export function ChapterEdit() {
 
                                         }
                                     </Flex>
-                                    <Image src='https://dicegrimorium.com/wp-content/uploads/2022/09/ForestGatesVol2Thumb.jpg' position="absolute" w={600} h={600} m={5}/>
+                                    <Image zIndex={1} 
+                                        src='https://dicegrimorium.com/wp-content/uploads/2022/09/ForestGatesVol2Thumb.jpg' 
+                                        position="absolute" w={600} h={600} m={5}/>
                                 </Flex>
                                 <Flex mt={-5} ml={5}>
                                     {["A","B","C","D","E"].map(e=>(
@@ -91,12 +96,17 @@ export function ChapterEdit() {
                                 </Flex>
                             </Flex>
 
-                            <Flex w={600} h={"auto"} direction="column" border="1px solid black" m={5} mb={10}> 
-                                {!!selectedMapPart && mapMatrix[selectedMapPart.x][selectedMapPart.y].points.map(e=>(
+                            <Flex w={600} h={600} direction="column" border="1px solid black" m={5} mb={10} overflow={"auto"}> 
+                                {!!selectedMapPart && mapMatrix[selectedMapPart.x][selectedMapPart.y].points?.map(e=>(
                                     <Flex key={e.id} border="1px solid black" borderRadius={10} m={5}>
                                         <Text fontSize={25} p={5}>{e.name}</Text>
                                     </Flex>
                                 ))}
+                                <Flex border="1px dashed black" onClick={onOpenExpPoint}
+                                    borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
+                                    <Text fontSize={25} p={5}>Add New Exploration Point</Text>
+                                </Flex>
+
                             </Flex>
 
                         </Flex>
