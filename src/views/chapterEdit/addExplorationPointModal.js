@@ -52,7 +52,20 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose }) {
                                 border="1px solid black" w={550} h={300} ml={5}>
                                 {expPointsArr.map((expPoint,index)=>(
                                     <Flex key={index} border="1px solid black" m={1} p={1} 
-                                        direction='column'>
+                                        bgColor={necessaryExpPoints.some(p => p.x === expPoint.x && p.y === expPoint.y && p.id === expPoint.id) ?
+                                            "rgba(255,255,0,0.5)": null}
+                                        direction='column' onClick={()=>{
+                                            if(necessaryExpPoints.some(p => p.x === expPoint.x && p.y === expPoint.y && p.id === expPoint.id)){
+                                                const newArr = necessaryExpPoints.filter(p=>{
+                                                    return !(p.id==expPoint.id && p.x === expPoint.x && p.y===expPoint.y)
+                                                })
+                                                setNecessaryExpPoints(newArr)
+                                            }
+                                            else{
+                                                setNecessaryExpPoints([...necessaryExpPoints, expPoint])
+                                                
+                                            }
+                                        }}>
                                         <Text>{expPoint.name}</Text>
                                         <Text>x:{expPoint.x} y:{expPoint.y}</Text>
                                     </Flex>
