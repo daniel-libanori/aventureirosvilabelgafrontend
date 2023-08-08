@@ -5,11 +5,11 @@ const initialState = {
     books: [
         {
             id: 1,
-            book_name: 'example',
+            book_name: 'Livro de Exemplo',
             chapters:[
                 {
                     id: 1,
-                    chapter_name: 'Chapter 1',
+                    chapter_name: 'Capítulo 1',
                     introduction: '',
                     map_id: 1,
                     exploration_points: 
