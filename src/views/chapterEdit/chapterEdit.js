@@ -33,6 +33,14 @@ export function ChapterEdit() {
         globalState.books[bookIndex]?.chapters[chapterId]?.exploration_points.length])
 
 
+    const numeroParaLetra = (numero)=> {
+        if (numero >= 1 && numero <= 26) {
+            return String.fromCharCode(64 + numero);
+        } else {
+            return 0
+        }
+    }
+
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
@@ -40,13 +48,27 @@ export function ChapterEdit() {
             <AddExplorationPointModal x={selectedMapPart?.x} y={selectedMapPart?.y}
                 isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} />
 
-            <Card w="80%" h="90%" mt="5vh" mb="5vh">
-                <Flex direction='column' align="center" justify='space-evenly' h="100%">
-                    <Text fontSize='8xl'>Chapter Edit</Text>
-                    <Flex direction="column" w="100%">
+
+            <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={1}
+                  right={0} w={320} h={170} borderTopLeftRadius={50} p={7}>
+                <Text fontSize='3xl'>Posição selecionada</Text>
+                <Text fontSize='5xl'>
+                    {selectedMapPart?.y && selectedMapPart?.x ?
+                        numeroParaLetra(selectedMapPart.y+1)+(selectedMapPart.x+1) :
+                        "--"
+                    }
+                    
+                    
+                </Text>
+            </Flex>
+
+            <Card h="90%" mt="5vh" mb="5vh">
+                <Flex direction='column' align="center" justify='space-evenly' h="100%" p={30}>
+                    <Text fontSize='8xl'>Capítulo 1 - Edição</Text>
+                    <Flex direction="column" w="100%" justify="center">
 
                         <Card onClick={onOpen}
-                            w="98%" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px' ml='15px' backgroundColor="green">
+                            h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px' backgroundColor="green">
                             <Flex direction='column' ml='15px'>
                                 <Text fontSize='3xl'>Add/Edit Introduction</Text>
                             </Flex>
@@ -97,26 +119,25 @@ export function ChapterEdit() {
                                 </Flex>
                             </Flex>
 
-                            <Flex w={600} h={600} direction="column" border="1px solid black" m={5} mb={10} overflow={"auto"}> 
-                                {!!selectedMapPart && mapMatrix[selectedMapPart.x][selectedMapPart.y].points?.map(e=>(
-                                    <Flex key={e.id} border="1px solid black" borderRadius={10} m={5}>
-                                        <Text fontSize={25} p={5}>{e.name}</Text>
-                                    </Flex>
-                                ))}
-                                { !!selectedMapPart &&
-                                    <Flex border="1px dashed black" onClick={onOpenExpPoint}
-                                        borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
-                                        <Text fontSize={25} p={5}>Add New Exploration Point</Text>
-                                    </Flex>
-                                }
-                                {!selectedMapPart &&
-                                    <Text>Selecione um ponto do mapa</Text>
-                                }
-
-                            </Flex>
+                            
 
                         </Flex>
-
+                        <Flex  h={600} direction="column" border="1px solid black" m={5} mb={10} overflow={"auto"}> 
+                            {!!selectedMapPart && mapMatrix[selectedMapPart.x][selectedMapPart.y].points?.map(e=>(
+                                <Flex key={e.id} border="1px solid black" borderRadius={10} m={5}>
+                                    <Text fontSize={25} p={5}>{e.name}</Text>
+                                </Flex>
+                            ))}
+                            { !!selectedMapPart &&
+                                <Flex border="1px dashed black" onClick={onOpenExpPoint}
+                                    borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
+                                    <Text fontSize={25} p={5}>Add New Exploration Point</Text>
+                                </Flex>
+                            }
+                            {!selectedMapPart &&
+                                <Text>Selecione um ponto do mapa</Text>
+                            }
+                        </Flex>
                     </Flex>
 
                 </Flex>

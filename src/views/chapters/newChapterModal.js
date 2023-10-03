@@ -23,8 +23,8 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
     const navigate = useNavigate()
 
     const onCreatePress = () => {
-        const newChapInfo = addNewChapter(bookId,map, chapterName) 
-        navigate(`/${bookId}/chapters/${newChapInfo.id}`)
+        //const newChapInfo = addNewChapter(bookId,map, chapterName) 
+        navigate(`/1/chapters/1`)
     }
 
     return (

@@ -20,9 +20,9 @@ export function NewBookModal({ isOpen, onOpen, onClose }) {
     const navigate = useNavigate()
 
     const onCreatePress = () => {
-        addNewBook(bookName)
-        const books = getBooks()
-        navigate(`/${books.length}/chapters`)
+        //addNewBook(bookName)
+        //const books = getBooks()
+        navigate(`/1/chapters`)
     }
 
     return (
