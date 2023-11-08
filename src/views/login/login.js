@@ -1,7 +1,7 @@
 import { Button, Card, Flex, Image, Input, Text } from '@chakra-ui/react'
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleLogin, handleLoginReq, handleSignUpReq } from '../../api/login';
+import { handleLoginReq, handleSignUpReq } from '../../api/loginAPI';
 import { GlobalUserContext } from '../../context/userState';
 
 export function Login() {
