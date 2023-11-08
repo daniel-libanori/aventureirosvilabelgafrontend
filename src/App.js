@@ -6,6 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 import { Login, Error, Books, Chapters, ChapterEdit} from './views'
 import { GlobalProvider } from "./context/globalState";
+import { GlobalUserProvider } from "./context/userState";
 
 const router = createBrowserRouter([
   {
@@ -41,9 +42,11 @@ function App() {
   return (
     <>
       <GlobalProvider>
-        <ChakraProvider>
-          <RouterProvider router={router} />
-        </ChakraProvider>
+        <GlobalUserProvider>
+          <ChakraProvider>
+            <RouterProvider router={router} />
+          </ChakraProvider>
+        </GlobalUserProvider>
       </GlobalProvider>
     </>
   );

@@ -11,25 +11,27 @@ import {
 import { useContext, useState } from 'react';
 import { GlobalContext } from '../../context/globalState';
 import { useNavigate } from 'react-router-dom';
+import { createNewBook } from '../../api/bookAPI';
 
 
-export function NewBookModal({ isOpen, onOpen, onClose }) {
+export function NewBookModal({ isOpen, onOpen, onClose, user }) {
 
-    const {addNewBook, getBooks} = useContext(GlobalContext)
     const [bookName, setBookName] = useState('')
     const navigate = useNavigate()
 
-    const onCreatePress = () => {
-        //addNewBook(bookName)
-        //const books = getBooks()
-        navigate(`/1/chapters`)
+
+    const handleCreateNewBook =  async () => {
+        const newBook = await createNewBook(user.id, bookName)
+        if(!newBook?.data?.error){
+            navigate(`/${newBook.data.id}/chapters`)
+        }
     }
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Modal Title</ModalHeader>
+                <ModalHeader>Criar um Novo Livro</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <Text>
@@ -45,7 +47,7 @@ export function NewBookModal({ isOpen, onOpen, onClose }) {
                 <ModalFooter mt={10}>
 
 
-                    <Button colorScheme='blue' mr={3} onClick={onCreatePress}>
+                    <Button colorScheme='blue' mr={3} onClick={handleCreateNewBook} isDisabled={bookName === ''}>
                         CRIAR !
                     </Button>
                 </ModalFooter>

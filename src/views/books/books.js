@@ -4,23 +4,35 @@ import {
 } from '@chakra-ui/react'
 import { NewBookModal } from './newBookModal';
 import { useNavigate } from 'react-router-dom';
-import { useContext, useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 import { GlobalContext } from '../../context/globalState';
+import { getMyBooks } from '../../api/bookAPI';
+import {GlobalUserContext} from '../../context/userState'
 
 
 export function Books() {
     const { isOpen, onOpen, onClose } = useDisclosure() //NewBookModal
     const navigate = useNavigate()
     const { getBooks, load } = useContext(GlobalContext)
+    const { getGlobalUser } = useContext(GlobalUserContext)
+    const [ user, setUser ] = useState({})
+    const [ books, setBooks ] = useState([])
 
     useLayoutEffect(()=>{
-        //load()
+        getData()
     },[])
+
+    const getData =  async () => {
+        setUser(await getGlobalUser())
+        const usr = await getGlobalUser()
+        const bks = await getMyBooks(usr.id)
+        await setBooks(bks.data)
+    }
 
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
-            <NewBookModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+            <NewBookModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} user={user}/>
 
             <Card h="100%">
                     
@@ -35,42 +47,18 @@ export function Books() {
                                 <Text fontSize='3xl' align='center'>Crie um novo Livro</Text>
                             </Flex>
                         </Card>
-                        <Card onClick={()=>navigate(`/1/chapters`)} 
-                                    w="100%" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px'>
-                            <Image src='https://images.pexels.com/photos/13650913/pexels-photo-13650913.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' w='130px' h='100px' ml='15px' />
-                            <Flex direction='column' ml='15px'>
-                                <Text fontSize='3xl'>Livro 1</Text>
-                                <Text fontSize='lg'>2 Capítulos</Text>
-                            </Flex>
-                        </Card>
-                        <Card onClick={()=>navigate(`/1/chapters`)} 
-                                    w="100%" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px'>
-                            <Image src='https://images.pexels.com/photos/13650913/pexels-photo-13650913.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' w='130px' h='100px' ml='15px' />
-                            <Flex direction='column' ml='15px'>
-                                <Text fontSize='3xl'>Livro 2</Text>
-                                <Text fontSize='lg'>2 Capítulos</Text>
-                            </Flex>
-                        </Card>
-<>
-                        {/* { getBooks().map((book,index) =>
-                            <Card key={index} onClick={()=>navigate(`/${book.id}/chapters`)} 
-                                w="600px" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px' ml='15px'>
+
+                        {   books.map((book)=>
+                            <Card key={book.id} onClick={()=>navigate(`/1/chapters`)} w="100%" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px'>
                                 <Image src='https://images.pexels.com/photos/13650913/pexels-photo-13650913.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' w='130px' h='100px' ml='15px' />
                                 <Flex direction='column' ml='15px'>
-                                    <Text fontSize='3xl'>{book.book_name}</Text>
-                                    <Text fontSize='lg'>{book.chapters.length} Capítulo{book.chapters.length !==1 && 's'}</Text>
+                                    <Text fontSize='3xl'>{book.name}</Text>
+                                    <Text fontSize='lg'>{book.chapterCount} Capítulo{book.chapterCount !== 1 ? "s" : ""}</Text>
                                 </Flex>
                             </Card>
-                            
-                            
-                            
-                            )}
+                        )
 
-                            { (getBooks().length === 0) &&
-                            <Text>
-                                Você ainda não possui livros criados, clique no botão verde para criar o seu primeiro.    
-                            </Text>} */}
-</>
+                        }
                     </Flex>
 
 
