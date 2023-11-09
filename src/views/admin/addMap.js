@@ -73,7 +73,7 @@ export function AddMap() {
     }
 
     const comprimirImage = async ()=>{
-        const compressionQuality = 50; // Ajuste a qualidade de compressão de 0 a 100
+        const compressionQuality = 10; // Ajuste a qualidade de compressão de 0 a 100
 
         compressImageBase64(imageBase64, compressionQuality)
             .then((compressedBase64) => {
@@ -129,7 +129,7 @@ export function AddMap() {
 
     const addNewMap = async () =>{
         await comprimirImage()
-        const newBook = await addMap(mapName,colunasMap,linhasMap,compressedImageBase64)
+        const newBook = await addMap(mapName,parseInt(colunasMap),parseInt(linhasMap),compressedImageBase64)
         if(!newBook?.data?.error){
             navigate(`/admin/addMap`)
         }
