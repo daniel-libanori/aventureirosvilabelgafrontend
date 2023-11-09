@@ -8,30 +8,31 @@ import { GlobalContext } from '../../context/globalState';
 import { useParams } from 'react-router-dom';
 import { returnMissingNumberOrNext } from '../../utils/arrFunctions';
 import { AddExplorationPointModal } from './addExplorationPointModal';
+import { getChapter } from '../../api/chapterAPI';
 
-const mapMatrixInit = [
-    [{x:0, y:0, points:[]},{x:0, y:1, points:[]},{x:0, y:2, points:[]},{x:0, y:3, points:[]},{x:0, y:4, points:[]}],
-    [{x:1, y:0, points:[]},{x:1, y:1, points:[]},{x:1, y:2, points:[]},{x:1, y:3, points:[]},{x:1, y:4, points:[]}],
-    [{x:2, y:0, points:[]},{x:2, y:1, points:[]},{x:2, y:2, points:[]},{x:2, y:3, points:[]},{x:2, y:4, points:[]}],
-    [{x:3, y:0, points:[]},{x:3, y:1, points:[]},{x:3, y:2, points:[]},{x:3, y:3, points:[]},{x:3, y:4, points:[]}],
-    [{x:4, y:0, points:[]},{x:4, y:1, points:[]},{x:4, y:2, points:[]},{x:4, y:3, points:[]},{x:4, y:4, points:[]}],
-]
+
 
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
     const { isOpen: isOpenExpPoint, onOpen: onOpenExpPoint , onClose: onCloseExpPoint } = useDisclosure() //IntroductionModal
-    const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
+    // const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
     const { bookId, chapterId } = useParams()
     const [ selectedMapPart, setSelectedMapPart ] = useState()
     const { getExplorationPoints,globalState } = useContext(GlobalContext)
     const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
 
+    const [chapterData, setChapterData] = useState({})
+
 
     useLayoutEffect(()=>{
-        setMapMatrix(getExplorationPoints(bookId, chapterId))
-    },[ globalState.books[bookIndex]?.chapters.length,
-        globalState.books[bookIndex]?.chapters[chapterId]?.exploration_points.length])
+        //setMapMatrix(getExplorationPoints(bookId, chapterId))
+        getData()
+    },[ ])
 
+    const getData = async () => {
+        const chps = await getChapter(chapterId)
+        await setChapterData(chps.data)
+    }
 
     const numeroParaLetra = (numero)=> {
         if (numero >= 1 && numero <= 26) {
@@ -44,12 +45,12 @@ export function ChapterEdit() {
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
-            <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-            <AddExplorationPointModal x={selectedMapPart?.x} y={selectedMapPart?.y}
-                isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} />
+            {isOpen && <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} chapterData={chapterData}/>}
+            {/* <AddExplorationPointModal x={selectedMapPart?.x} y={selectedMapPart?.y}
+                isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} /> */}
 
 
-            <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={1}
+            {/* <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={1}
                   right={0} w={320} h={170} borderTopLeftRadius={50} p={7}>
                 <Text fontSize='3xl'>Posição selecionada</Text>
                 <Text fontSize='5xl'>
@@ -60,11 +61,11 @@ export function ChapterEdit() {
                     
                     
                 </Text>
-            </Flex>
+            </Flex> */}
 
             <Card h="90%" mt="5vh" mb="5vh">
                 <Flex direction='column' align="center" justify='space-evenly' h="100%" p={30}>
-                    <Text fontSize='8xl'>Capítulo 1 - Edição</Text>
+                    <Text fontSize='8xl'>{chapterData.name} - Edição</Text>
                     <Flex direction="column" w="100%" justify="center">
 
                         <Card onClick={onOpen}
@@ -75,7 +76,7 @@ export function ChapterEdit() {
                         </Card>
 
 
-                        <Flex direction="row">
+                        {/* <Flex direction="row">
                             <Flex direction="column" mt={5}>
                                 {[1,2,3,4,5].map(e=>(
                                     <Flex key={e} w={10} h={119} justify="flex-end"  align="center">
@@ -137,12 +138,14 @@ export function ChapterEdit() {
                             {!selectedMapPart &&
                                 <Text>Selecione um ponto do mapa</Text>
                             }
-                        </Flex>
+                        </Flex> */}
                     </Flex>
 
                 </Flex>
             </Card>
         </Flex>
     );
+
+
 }
 

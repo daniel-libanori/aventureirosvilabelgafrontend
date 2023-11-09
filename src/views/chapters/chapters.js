@@ -53,7 +53,7 @@ export function Chapters() {
                     </Card>
                     {
                         chapters.map(chps=>(
-                            <Card onClick={()=>navigate(`/${bookId}/chapters`)}  key={chps.id}
+                            <Card onClick={()=>navigate(`/${bookId}/chapters/${chps.id}`)}  key={chps.id}
                                 w="100%" h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px'>
                                 <Flex direction='column' ml='15px'>
                                     <Text fontSize='3xl'>{chps.name}</Text>
