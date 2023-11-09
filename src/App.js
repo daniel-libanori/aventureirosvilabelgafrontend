@@ -4,7 +4,7 @@ import {
 } from "react-router-dom";
 import { ChakraProvider } from '@chakra-ui/react'
 
-import { Login, Error, Books, Chapters, ChapterEdit} from './views'
+import { Login, Error, Books, Chapters, ChapterEdit, AddMap} from './views'
 import { GlobalProvider } from "./context/globalState";
 import { GlobalUserProvider } from "./context/userState";
 
@@ -32,6 +32,11 @@ const router = createBrowserRouter([
   {
     path: "/:bookId/chapters/:chapterId",
     element: <ChapterEdit/>,
+    errorElement: <Error/>
+  },
+  {
+    path: "/admin/addMap",
+    element: <AddMap/>,
     errorElement: <Error/>
   }
 

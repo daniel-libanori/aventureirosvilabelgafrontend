@@ -8,8 +8,7 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import { useContext, useState } from 'react';
-import { GlobalContext } from '../../context/globalState';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createNewBook } from '../../api/bookAPI';
 
