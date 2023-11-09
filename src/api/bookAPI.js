@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-
+export const getBook = async (bookId) => {
+    try {
+        const response = await axios.get(`http://localhost:3030/book/${bookId}`);
+        return response
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
 export const getMyBooks = async (userId) => {

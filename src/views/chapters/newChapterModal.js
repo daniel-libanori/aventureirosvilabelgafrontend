@@ -8,9 +8,11 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import { useContext, useState } from 'react';
+import { useContext, useLayoutEffect, useState } from 'react';
 import { GlobalContext } from '../../context/globalState';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getAllMaps } from '../../api/mapAPI';
+import { createNewChapter } from '../../api/chapterAPI';
 
 
 export function NewChapterModal({ isOpen, onOpen, onClose }) {
@@ -18,13 +20,27 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
     const {addNewChapter, getChapters} = useContext(GlobalContext)
     const [creationStep, setCreationStep] = useState(1)
     const [chapterName, setChapterName] = useState('')
-    const [map, setMap] = useState('1')
+    const [map, setMap] = useState('')
+    const [mapsArr, setMapsArr] = useState([])
     const { bookId } = useParams()
     const navigate = useNavigate()
 
-    const onCreatePress = () => {
+    const onCreatePress = async () => {
         //const newChapInfo = addNewChapter(bookId,map, chapterName) 
-        navigate(`/1/chapters/1`)
+
+        const res = await createNewChapter(bookId, chapterName, parseInt(map))     
+
+        navigate(`/${bookId}/chapters/1`)
+    }
+
+    useLayoutEffect(()=>{
+        getData()
+    },[])
+
+    const getData = async () => {
+        const mps = await getAllMaps()
+        await setMapsArr(mps.data)
+
     }
 
     return (
@@ -57,7 +73,9 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
                                 value={map}
                                 onChange={(e)=>setMap(e.target.value)}
                             >
-                                <option value='1'>Museu</option>
+                                {mapsArr.map(m=>(
+                                    <option value={m.id}>{m.name}</option>    
+                                ))}
                             </Select>
                         </>
                     }

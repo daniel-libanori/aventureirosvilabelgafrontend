@@ -1,12 +1,8 @@
 import { Card, Flex, Text, Button, Input } from '@chakra-ui/react'
-import {
-    useDisclosure
-} from '@chakra-ui/react'
+
 import { useNavigate } from 'react-router-dom';
-import { useContext, useLayoutEffect, useState } from 'react';
-import { GlobalContext } from '../../context/globalState';
-import { getMyBooks } from '../../api/bookAPI';
-import {GlobalUserContext} from '../../context/userState'
+import { useState } from 'react';
+
 import { addMap } from '../../api/mapAPI';
 
 
@@ -139,53 +135,47 @@ export function AddMap() {
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
 
-            <Card h="100%">
+            <Card h="100%">    
+                <Flex  p={20} align='center' justify='space-between' direction="column">
+                    <Text fontSize='6xl'>Adicionar Mapa</Text>
                     
-                    
-                    <Flex  p={20} align='center' justify='space-between' direction="column">
-                        <Text fontSize='6xl'>Adicionar Mapa</Text>
-                        
-                        <input type="file" accept="image/*" onChange={handleImageChange} />
-                        {!!imageBase64 && 
-                        (<>
-                            <Flex position="relative" mt={5}>
-                                {contarAteNumero(linhasMap).map(num=>(
-                                    <Flex pos="absolute" key={num} zIndex={3} h={imageHeight/linhasMap} display="flex" align="center" left={-5} top={(num-1)*(imageHeight/linhasMap)}>
-                                        <h3>{num}</h3>
-                                    </Flex>))}
-                                <Flex h={imageHeight} w={imageWidth} wrap="wrap" zIndex={2}>
-                                    {contarAteNumero(linhasMap*colunasMap).map(()=>(
-                                        <Flex h={imageHeight/linhasMap} w={imageWidth/colunasMap} border="2px solid red"  
-                                            zIndex={2} align="center" justify="center"
-                                    />))}
+                    <input type="file" accept="image/*" onChange={handleImageChange} />
+                    {!!imageBase64 && 
+                    (<>
+                        <Flex position="relative" mt={5}>
+                            {contarAteNumero(linhasMap).map(num=>(
+                                <Flex pos="absolute" key={num} zIndex={3} h={imageHeight/linhasMap} display="flex" align="center" left={-5} top={(num-1)*(imageHeight/linhasMap)}>
+                                    <h3>{num}</h3>
+                                </Flex>))}
+                            <Flex h={imageHeight} w={imageWidth} wrap="wrap" zIndex={2}>
+                                {contarAteNumero(linhasMap*colunasMap).map(()=>(
+                                    <Flex h={imageHeight/linhasMap} w={imageWidth/colunasMap} border="2px solid red"  
+                                        zIndex={2} align="center" justify="center"
+                                />))}
+                            </Flex>
+                            <img src={imageBase64} alt="Uploaded" style={{position:"absolute"}}/>
+                        </Flex>
+                        <Flex mt={0} ml={5}>
+                            {contarLetrasAteNumero(colunasMap).map(e=>(
+                                <Flex key={e} w={imageWidth/colunasMap} h={10} justify="center" align="center" zIndex={3}>
+                                    <h3>{e}</h3>
                                 </Flex>
-                                <img src={imageBase64} alt="Uploaded" style={{position:"absolute"}}/>
-                            </Flex>
-                            <Flex mt={0} ml={5}>
-                                {contarLetrasAteNumero(colunasMap).map(e=>(
-                                    <Flex key={e} w={imageWidth/colunasMap} h={10} justify="center" align="center" zIndex={3}>
-                                        <h3>{e}</h3>
-                                    </Flex>
-                                ))} 
-                            </Flex>
-                        </>
-                        )
-                        }
-                        <h5 style={{marginTop: 10}}>Nome do Mapa</h5>
-                        <Input placeholder='Nome do mapa' value={mapName} onChange={(e)=>{setMapName(e.target.value)}}/>
+                            ))} 
+                        </Flex>
+                    </>
+                    )
+                    }
+                    <h5 style={{marginTop: 10}}>Nome do Mapa</h5>
+                    <Input placeholder='Nome do mapa' value={mapName} onChange={(e)=>{setMapName(e.target.value)}}/>
 
-                        <h5 style={{marginTop: 10}}>Numero de Linhas</h5>
-                        <Input type='number' min="1" placeholder='Numero Linhas' value={linhasMap} onChange={(e)=>{setLinhasMap(e.target.value)}}/>
+                    <h5 style={{marginTop: 10}}>Numero de Linhas</h5>
+                    <Input type='number' min="1" placeholder='Numero Linhas' value={linhasMap} onChange={(e)=>{setLinhasMap(e.target.value)}}/>
 
-                        <h5 style={{marginTop: 10}}>Numero de Colunas</h5>
-                        <Input type='number' min="1" placeholder='Numero Colunas' value={colunasMap} onChange={(e)=>{setColunasMap(e.target.value)}}/>
+                    <h5 style={{marginTop: 10}}>Numero de Colunas</h5>
+                    <Input type='number' min="1" placeholder='Numero Colunas' value={colunasMap} onChange={(e)=>{setColunasMap(e.target.value)}}/>
 
-                        <Button isDisabled={!imageBase64 || mapName=="" || linhasMap < 1 || colunasMap < 1} style={{marginTop: 10}} onClick={addNewMap}>Adicionar Novo Mapa</Button>
-                    </Flex>
-
-
-
-
+                    <Button isDisabled={!imageBase64 || mapName=="" || linhasMap < 1 || colunasMap < 1} style={{marginTop: 10}} onClick={addNewMap}>Adicionar Novo Mapa</Button>
+                </Flex>
             </Card>
         </Flex>
     );
