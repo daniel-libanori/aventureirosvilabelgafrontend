@@ -1,14 +1,15 @@
-import { Card, Flex, Image, Text } from '@chakra-ui/react'
+import { Button, Card, Flex, Text } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
 import { IntroductionModal } from './introductionModal';
-import { useContext, useLayoutEffect, useState } from 'react';
+import { useContext, useLayoutEffect, useState, useEffect } from 'react';
 import { GlobalContext } from '../../context/globalState';
 import { useParams } from 'react-router-dom';
-import { returnMissingNumberOrNext } from '../../utils/arrFunctions';
 import { AddExplorationPointModal } from './addExplorationPointModal';
 import { getChapter } from '../../api/chapterAPI';
+import { getMap } from '../../api/mapAPI'
+import { createNewExplorationPoint, getChapterExplorationPoints } from '../../api/explorationPointAPI';
 
 
 
@@ -18,20 +19,86 @@ export function ChapterEdit() {
     // const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
     const { bookId, chapterId } = useParams()
     const [ selectedMapPart, setSelectedMapPart ] = useState()
-    const { getExplorationPoints,globalState } = useContext(GlobalContext)
+    const { globalState } = useContext(GlobalContext)
     const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
 
     const [chapterData, setChapterData] = useState({})
-
+    const [mapData, setMapData] = useState({})
+    const [linhasMap, setLinhasMap] = useState(1);
+    const [colunasMap, setColunasMap] = useState(1);
+    const [imageWidth, setImageWidth] = useState(0);
+    const [imageHeight, setImageHeight] = useState(0);
+    const [expPointArr, setExpPointArr] = useState([]);
+    const [selectedSquare, setSelectedSquare] = useState(0)
 
     useLayoutEffect(()=>{
-        //setMapMatrix(getExplorationPoints(bookId, chapterId))
         getData()
     },[ ])
 
+    useEffect(()=>{
+        if(!!mapData?.mapImagebase64){
+            const img = new Image();
+            img.src = mapData?.mapImagebase64
+        
+            img.onload = () => {
+                setImageWidth(img.width);
+                setImageHeight(img.height);
+            };
+        }
+    },[mapData?.mapImagebase64])
+
     const getData = async () => {
         const chps = await getChapter(chapterId)
+        const mps = await getMap(chps.data.mapId)
+        const expPts = await getChapterExplorationPoints(chapterId, "position")
+
+        const newExpPtsArr = []
+        await Object.keys(expPts.data).forEach(key => {
+            const newKey = convertKeyToPosition(key,mps.data.xMapSize)
+            const newObj = {}
+            newObj[newKey] = expPts.data[key]
+            newExpPtsArr.push(newObj)
+        });
+
+        await setExpPointArr(newExpPtsArr)
         await setChapterData(chps.data)
+        await setMapData(mps.data)
+        
+        await setLinhasMap(mps.data.yMapSize)
+        await setColunasMap(mps.data.xMapSize)
+    }
+
+    function convertKeyToPosition(key, numColumns) {
+        const [x, y] = key.split('-').map(Number);
+        return (y - 1) * numColumns + x;
+    }
+
+    function contarAteNumero(numero) {
+        if(numero==0) return [1]
+
+        const resultado = [];
+        for (let i = 1; i <= numero; i++) {
+            resultado.push(i);
+        }
+        return resultado;
+    }
+    function contarLetrasAteNumero(numero) {
+        const resultado = [];
+        const alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        
+        for (let i = 1; i <= numero; i++) {
+          let atual = i - 1;
+          let contagem = '';
+          
+          do {
+            contagem = alfabeto[atual % 26] + contagem;
+            atual = Math.floor(atual / 26) - 1;
+          } while (atual >= 0);
+          
+          resultado.push(contagem);
+        }
+        
+        return resultado;
     }
 
     const numeroParaLetra = (numero)=> {
@@ -44,27 +111,27 @@ export function ChapterEdit() {
 
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
-
             {isOpen && <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} chapterData={chapterData}/>}
             {/* <AddExplorationPointModal x={selectedMapPart?.x} y={selectedMapPart?.y}
                 isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} /> */}
 
-
-            {/* <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={1}
+            <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={1}
                   right={0} w={320} h={170} borderTopLeftRadius={50} p={7}>
                 <Text fontSize='3xl'>Posição selecionada</Text>
                 <Text fontSize='5xl'>
-                    {selectedMapPart?.y && selectedMapPart?.x ?
-                        numeroParaLetra(selectedMapPart.y+1)+(selectedMapPart.x+1) :
+                    {selectedSquare !== 0 ?
+                        numeroParaLetra((selectedSquare%colunasMap !== 0 ? selectedSquare%colunasMap : colunasMap))
+                        +
+                        (Math.ceil(selectedSquare/colunasMap)) :
                         "--"
                     }
                     
                     
                 </Text>
-            </Flex> */}
+            </Flex>
 
-            <Card h="90%" mt="5vh" mb="5vh">
-                <Flex direction='column' align="center" justify='space-evenly' h="100%" p={30}>
+            <Card minH={imageHeight + 1000} mt="5vh" mb="5vh">
+                <Flex direction='column' align="center" justify='space-evenly' h="100%" p={50}>
                     <Text fontSize='8xl'>{chapterData.name} - Edição</Text>
                     <Flex direction="column" w="100%" justify="center">
 
@@ -76,45 +143,38 @@ export function ChapterEdit() {
                         </Card>
 
 
-                        {/* <Flex direction="row">
-                            <Flex direction="column" mt={5}>
-                                {[1,2,3,4,5].map(e=>(
-                                    <Flex key={e} w={10} h={119} justify="flex-end"  align="center">
-                                        <Text fontSize={30} fontWeight="700" >{e}</Text>
-                                    </Flex>
-                                ))}
-                            </Flex>
-                            
+                        <Flex direction="row">
+                           
                             <Flex direction="column">
                                 <Flex position="relative">
-                                    <Flex h={600} w={600} m={5} wrap="wrap" zIndex={2}>
-                                        { mapMatrix?.map((row, rowIdx) => row?.map((item, columnIdx) =>(
-                                            <Flex h={119} w={119} border="1px solid black" key={`${rowIdx}${columnIdx}`} 
-                                                zIndex={2} align="center" justify="center"
-                                                bgColor={selectedMapPart?.x === rowIdx && selectedMapPart?.y === columnIdx ?
-                                                            "rgba(255,255,0,0.4)": null}
-                                                onClick={()=>setSelectedMapPart({x:rowIdx,y:columnIdx})}
+                                    
+                                    {contarAteNumero(linhasMap).map(num=>(
+                                        <Flex pos="absolute" key={num} zIndex={3} h={imageHeight/linhasMap} display="flex" align="center" left={-6} top={(num-1)*(imageHeight/linhasMap)}>
+                                            <Text fontSize={30} fontWeight="700">{num}</Text >
+                                        </Flex>))}
+                                    <Flex h={imageHeight} w={imageWidth} wrap="wrap" zIndex={2}>
+                                        {contarAteNumero(linhasMap*colunasMap).map((num)=>(
+                                            <Flex h={imageHeight/linhasMap} w={imageWidth/colunasMap} border="2px solid red"  bgColor={selectedSquare==num ? 'rgba(255,255,0,0.5)' : null}
+                                                zIndex={2} align="center" justify="center" key={num} onClick={()=>{num!== selectedSquare ? setSelectedSquare(num) : setSelectedSquare(0)}}
                                             >
-                                                { item?.points?.length > 0 &&
-                                                    <Flex bg="rgba(255,0,0,0.7)" w={16} h={16} justify="center" align="center" borderRadius={40}>
-                                                        <Text fontSize={40} textAlign="center">{item?.points?.length}</Text>
+                                                { expPointArr?.some(elm => num in elm) &&
+                                                    <Flex h={(imageHeight/linhasMap)*0.5} w={(imageWidth/colunasMap)*0.5} bgColor={selectedSquare==num ? "rgba(255,0,0,0.7)" : "rgba(255,255,0,0.7)" }
+                                                        borderRadius={100} display="flex" align="center" justify="center">
+                                                            <Text fontWeight={500}>
+                                                                {expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(num)][num].length}
+                                                            </Text>
                                                     </Flex>
                                                 }
                                             </Flex>
-                                        )))
-
-
-
-                                        }
+                                        ))}
                                     </Flex>
-                                    <Image zIndex={1} 
-                                        src='https://dicegrimorium.com/wp-content/uploads/2022/09/ForestGatesVol2Thumb.jpg' 
-                                        position="absolute" w={600} h={600} m={5}/>
+                                    <img style={{zIndex: 1, position:'absolute'}}
+                                        src={mapData.mapImagebase64}/>
                                 </Flex>
-                                <Flex mt={-5} ml={5}>
-                                    {["A","B","C","D","E"].map(e=>(
-                                        <Flex key={e} w={119} h={10} justify="center" align="center" >
-                                            <Text fontSize={30} fontWeight="700" >{e}</Text>
+                                <Flex>
+                                    {contarLetrasAteNumero(colunasMap).map(e=>(
+                                        <Flex key={e} w={imageWidth/colunasMap} h={10} justify="center" align="center" zIndex={3}>
+                                            <Text fontSize={30} fontWeight="700">{e}</Text>
                                         </Flex>
                                     ))} 
                                 </Flex>
@@ -123,22 +183,25 @@ export function ChapterEdit() {
                             
 
                         </Flex>
+
                         <Flex  h={600} direction="column" border="1px solid black" m={5} mb={10} overflow={"auto"}> 
-                            {!!selectedMapPart && mapMatrix[selectedMapPart.x][selectedMapPart.y].points?.map(e=>(
+                            {!!selectedSquare && expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(selectedSquare)][selectedSquare].map(e=>(
                                 <Flex key={e.id} border="1px solid black" borderRadius={10} m={5}>
                                     <Text fontSize={25} p={5}>{e.name}</Text>
                                 </Flex>
                             ))}
-                            { !!selectedMapPart &&
+
+
+                            { !!selectedSquare &&
                                 <Flex border="1px dashed black" onClick={onOpenExpPoint}
                                     borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
                                     <Text fontSize={25} p={5}>Add New Exploration Point</Text>
                                 </Flex>
                             }
-                            {!selectedMapPart &&
+                            {!selectedSquare &&
                                 <Text>Selecione um ponto do mapa</Text>
                             }
-                        </Flex> */}
+                        </Flex>
                     </Flex>
 
                 </Flex>
