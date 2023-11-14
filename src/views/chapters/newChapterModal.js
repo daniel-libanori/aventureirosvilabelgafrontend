@@ -29,8 +29,7 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
         //const newChapInfo = addNewChapter(bookId,map, chapterName) 
 
         const res = await createNewChapter(bookId, chapterName, parseInt(map))     
-
-        navigate(`/${bookId}/chapters/1`)
+        navigate(`/${bookId}/chapters/${res.data.id}`)
     }
 
     useLayoutEffect(()=>{
