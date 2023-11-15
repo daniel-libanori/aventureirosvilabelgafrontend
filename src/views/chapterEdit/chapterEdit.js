@@ -1,26 +1,23 @@
-import { Button, Card, Flex, Text } from '@chakra-ui/react'
+import { Card, Flex, Text } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
 import { IntroductionModal } from './introductionModal';
-import { useContext, useLayoutEffect, useState, useEffect } from 'react';
-import { GlobalContext } from '../../context/globalState';
+import { useLayoutEffect, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { AddExplorationPointModal } from './addExplorationPointModal';
 import { getChapter } from '../../api/chapterAPI';
 import { getMap } from '../../api/mapAPI'
-import { createNewExplorationPoint, getChapterExplorationPoints } from '../../api/explorationPointAPI';
-
+import { deleteExplorationPoint, getChapterExplorationPoints } from '../../api/explorationPointAPI';
+import {DeleteIcon} from '@chakra-ui/icons'
+import { useNavigate } from 'react-router-dom';
 
 
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
     const { isOpen: isOpenExpPoint, onOpen: onOpenExpPoint , onClose: onCloseExpPoint } = useDisclosure() //IntroductionModal
-    // const [ mapMatrix, setMapMatrix ] = useState(mapMatrixInit)
-    const { bookId, chapterId } = useParams()
-    const [ selectedMapPart, setSelectedMapPart ] = useState()
-    const { globalState } = useContext(GlobalContext)
-    const bookIndex = globalState.books.map(e=>e.id).indexOf(parseInt(bookId))
+    const { chapterId } = useParams()
+    const navigate = useNavigate()
 
     const [chapterData, setChapterData] = useState({})
     const [mapData, setMapData] = useState({})
@@ -30,6 +27,9 @@ export function ChapterEdit() {
     const [imageHeight, setImageHeight] = useState(0);
     const [expPointArr, setExpPointArr] = useState([]);
     const [selectedSquare, setSelectedSquare] = useState(0)
+    
+    const [selectedExplorationPoint, setSelectedExplorationPoint] = useState({})
+    const [updateOrAddExpPointModalType, setUpdateOrAddExpPointModalType] = useState("add") //add or update
 
     useLayoutEffect(()=>{
         getData()
@@ -109,13 +109,35 @@ export function ChapterEdit() {
         }
     }
 
+    const handleSelectExplorationPointToOpenUpdateModal = (explorationPoint) => {
+        setUpdateOrAddExpPointModalType("update")
+        setSelectedExplorationPoint(explorationPoint)
+        onOpenExpPoint()
+    }
+
+    const onDeletePress = async (expPoint) => {
+        const res = await deleteExplorationPoint(expPoint.id)
+        navigate(0)   
+    }
+
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
             {isOpen && <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} chapterData={chapterData}/>}
-            {/* <AddExplorationPointModal x={selectedMapPart?.x} y={selectedMapPart?.y}
-                isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} onClose={onCloseExpPoint} /> */}
-
-            <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={1}
+            {isOpenExpPoint &&
+                <AddExplorationPointModal 
+                    x={selectedSquare%colunasMap !== 0 ? selectedSquare%colunasMap : colunasMap} 
+                    y={Math.ceil(selectedSquare/colunasMap)} expPointArr={expPointArr}
+                    isOpen={isOpenExpPoint} onOpen={onOpenExpPoint} 
+                    onClose={()=>{
+                        setUpdateOrAddExpPointModalType("add")
+                        setSelectedExplorationPoint({})
+                        onCloseExpPoint()
+                    }} 
+                    type={updateOrAddExpPointModalType}
+                    selectedExplorationPoint={selectedExplorationPoint}
+                    />
+            }
+            <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={10}
                   right={0} w={320} h={170} borderTopLeftRadius={50} p={7}>
                 <Text fontSize='3xl'>Posição selecionada</Text>
                 <Text fontSize='5xl'>
@@ -138,7 +160,7 @@ export function ChapterEdit() {
                         <Card onClick={onOpen}
                             h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px' backgroundColor="green">
                             <Flex direction='column' ml='15px'>
-                                <Text fontSize='3xl'>Add/Edit Introduction</Text>
+                                <Text fontSize='3xl'>Adicionar/Editar Introdução do Capítulo</Text>
                             </Flex>
                         </Card>
 
@@ -185,9 +207,13 @@ export function ChapterEdit() {
                         </Flex>
 
                         <Flex  h={600} direction="column" border="1px solid black" m={5} mb={10} overflow={"auto"}> 
-                            {!!selectedSquare && expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(selectedSquare)][selectedSquare].map(e=>(
-                                <Flex key={e.id} border="1px solid black" borderRadius={10} m={5}>
+                            {!!selectedSquare && expPointArr?.some(elm => selectedSquare in elm)  &&
+                             expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(selectedSquare)][selectedSquare].map(e=>(
+                                <Flex key={e.id} border="1px solid black" 
+                                    borderRadius={10} m={5} onClick={()=>handleSelectExplorationPointToOpenUpdateModal(e)}
+                                    direction="row" align="center" justify="space-between">
                                     <Text fontSize={25} p={5}>{e.name}</Text>
+                                    <DeleteIcon boxSize={8} mr={5} onClick={(event)=>{event.stopPropagation(); onDeletePress(e)}} zIndex={10}/>
                                 </Flex>
                             ))}
 
@@ -195,7 +221,7 @@ export function ChapterEdit() {
                             { !!selectedSquare &&
                                 <Flex border="1px dashed black" onClick={onOpenExpPoint}
                                     borderRadius={10} m={5} bgColor="rgba(0,255,0,0.2)">
-                                    <Text fontSize={25} p={5}>Add New Exploration Point</Text>
+                                    <Text fontSize={25} p={5}>Adicionar Novo Ponto de Exploração</Text>
                                 </Flex>
                             }
                             {!selectedSquare &&
