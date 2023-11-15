@@ -1,19 +1,18 @@
-import { Image, Card, Flex, Text } from '@chakra-ui/react'
+import { Image, Card, Flex, Text, Button } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
 import { NewBookModal } from './newBookModal';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useLayoutEffect, useState } from 'react';
-import { GlobalContext } from '../../context/globalState';
 import { getMyBooks } from '../../api/bookAPI';
 import {GlobalUserContext} from '../../context/userState'
+import { getPdf } from '../../api/pdfAPI';
 
 
 export function Books() {
     const { isOpen, onOpen, onClose } = useDisclosure() //NewBookModal
     const navigate = useNavigate()
-    const { getBooks, load } = useContext(GlobalContext)
     const { getGlobalUser } = useContext(GlobalUserContext)
     const [ user, setUser ] = useState({})
     const [ books, setBooks ] = useState([])
@@ -26,9 +25,16 @@ export function Books() {
         setUser(await getGlobalUser())
         const usr = await getGlobalUser()
         const bks = await getMyBooks(usr.id)
-        await setBooks(bks.data)
+        await setBooks(bks?.data)
     }
 
+    const generatePDF = async (bookId) => {
+        const response = await getPdf(bookId)
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url);
+    };
+    
     return (
         <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
 
@@ -55,6 +61,10 @@ export function Books() {
                                     <Text fontSize='3xl'>{book.name}</Text>
                                     <Text fontSize='lg'>{book.chapterCount} Capítulo{book.chapterCount !== 1 ? "s" : ""}</Text>
                                 </Flex>
+                                <Button onClick={(event)=>{event.stopPropagation(); generatePDF(book.id)}
+                                }>
+                                    Gerar PDF
+                                </Button>
                             </Card>
                         )
 
