@@ -8,8 +8,7 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import { useContext, useLayoutEffect, useState } from 'react';
-import { GlobalContext } from '../../context/globalState';
+import { useLayoutEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAllMaps } from '../../api/mapAPI';
 import { createNewChapter } from '../../api/chapterAPI';
@@ -17,7 +16,6 @@ import { createNewChapter } from '../../api/chapterAPI';
 
 export function NewChapterModal({ isOpen, onOpen, onClose }) {
 
-    const {addNewChapter, getChapters} = useContext(GlobalContext)
     const [creationStep, setCreationStep] = useState(1)
     const [chapterName, setChapterName] = useState('')
     const [map, setMap] = useState('')
@@ -26,8 +24,6 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
     const navigate = useNavigate()
 
     const onCreatePress = async () => {
-        //const newChapInfo = addNewChapter(bookId,map, chapterName) 
-
         const res = await createNewChapter(bookId, chapterName, parseInt(map))     
         navigate(`/${bookId}/chapters/${res.data.id}`)
     }
@@ -46,16 +42,16 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Modal Title</ModalHeader>
+                <ModalHeader>Criação de Novo Capítulo</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     {creationStep === 1 &&
                         <>
                             <Text>
-                                Agora vamos criar um capítulo para seu livro!
+                                Todo bom livro, tem capítulos, não é mesmo? Vamos criar juntos esse novo capítulo!
                             </Text>
                             <Text mt={5}>
-                                Qual será o nome desse capítulo?
+                                Qual será o título desse capítulo?
                             </Text>
                             <Input placeholder='Insira aqui o nome do seu novo capítulo...' value={chapterName}
                                 onChange={(e)=> setChapterName(e.target.value)}/>
@@ -64,8 +60,11 @@ export function NewChapterModal({ isOpen, onOpen, onClose }) {
 
                     {creationStep === 2 &&
                         <>
+                            <Text>
+                                Para cada capítulo, é necessário um mapa.
+                            </Text>
                             <Text mt={5}>
-                                Qual será o mapa desse capítulo?
+                                Qual mapa você deseja associar a este capítulo?
                             </Text>
                             <Select 
                                 placeholder='Escolha o Mapa'
