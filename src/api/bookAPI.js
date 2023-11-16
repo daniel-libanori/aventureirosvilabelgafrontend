@@ -27,3 +27,21 @@ export const createNewBook = async (userId, name) => {
         console.error(error);
     }
 }
+
+export const updateBook = async (bookId, name) => {
+    try {
+        const response = await axios.put(`http://localhost:3030/book/${bookId}`, {name: name});
+        return response
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const deleteBook = async (bookId) => {
+    try {
+        const response = await axios.delete(`http://localhost:3030/book/${bookId}`);
+        return response
+    } catch (error) {
+        console.error(error);
+    }
+}

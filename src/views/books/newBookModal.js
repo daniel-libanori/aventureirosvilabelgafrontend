@@ -8,34 +8,53 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createNewBook } from '../../api/bookAPI';
+import { createNewBook, updateBook } from '../../api/bookAPI';
 
 
-export function NewBookModal({ isOpen, onOpen, onClose, user }) {
+export function NewBookModal({ isOpen, onOpen, onClose, user, type, selectedBook }) {
 
     const [bookName, setBookName] = useState('')
     const navigate = useNavigate()
 
+    useLayoutEffect(() => {
+        if(type === "update"){
+            setBookName(selectedBook?.name)
+        }
+    },[])
 
     const handleCreateNewBook =  async () => {
-        const newBook = await createNewBook(user.id, bookName)
-        if(!newBook?.data?.error){
-            navigate(`/${newBook.data.id}/chapters`)
+        if(type === "add"){
+            const newBook = await createNewBook(user.id, bookName)
+            if(!newBook?.data?.error){
+                navigate(`/${newBook.data.id}/chapters`)
+            }
+        }
+        else if(type === "update"){
+            const updatedBook = await updateBook(selectedBook.id, bookName)
+            if(!updatedBook?.data?.error){
+                navigate(0)
+            }
         }
     }
 
+
+    
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Criar um Novo Livro</ModalHeader>
+                <ModalHeader>
+                    { type === "add" ?
+                        "Criar um Novo Livro" :
+                        `Edição do Livro: ${selectedBook?.name}`
+                    }
+                </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Text>
-                        Parabéns, você deu o primeiro passo para criar seu livro!
-                    </Text>
+                    { type === "add" &&
+                        <Text>Parabéns, você deu o primeiro passo para criar seu livro!</Text>}
                     <Text mt={5}>
                         Qual será o nome do seu livro?
                     </Text>
@@ -47,7 +66,7 @@ export function NewBookModal({ isOpen, onOpen, onClose, user }) {
 
 
                     <Button colorScheme='blue' mr={3} onClick={handleCreateNewBook} isDisabled={bookName === ''}>
-                        CRIAR !
+                        {type === 'add' ? "CRIAR !" : "Atualizar"}
                     </Button>
                 </ModalFooter>
             </ModalContent>
