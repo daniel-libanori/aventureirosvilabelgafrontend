@@ -1,4 +1,4 @@
-import { Text, Button, Input, Select, Textarea } from '@chakra-ui/react'
+import { Text, Button, Input, Select, Textarea, HStack, useNumberInput, NumberInput, NumberInputField } from '@chakra-ui/react'
 import {
     Flex,
     Modal,
@@ -21,9 +21,36 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
     const [ preRequisiteExpPoints, setPreRequisiteExpPoints] = useState([])
     const [ name, setName ] = useState("")
     const [ code, setCode ] = useState("")
+    const [ explorationPointType, setExplorationPointType ] = useState("text")
     const navigate = useNavigate()
 
     const [formatedExpPointArr, setFormatedExpPointArr] = useState([])
+
+    // Fight
+    const [enemyArr, setEnemyArr] = useState([])
+    const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
+      step: 1,
+      defaultValue: 1,
+      min: 1,
+      max: 10,
+      precision: 0,
+    })
+
+    //challanges
+    const [diceAmount, setDiceAmount] = useState(1)
+    const [diceMinimumValue, setDiceMinimumValue] = useState(1)
+    const [diceSuccessAmout, setDiceSuccessAmout] = useState(1)
+
+    //challanges and fight
+    const [successText, setSuccessText] = useState("")
+    const [failText, setFailText] = useState("")
+
+  const inc = getIncrementButtonProps()
+  const dec = () => {
+    setEnemyArr(enemyArr.slice(0, -1))
+    getDecrementButtonProps()
+  }
+  const input = getInputProps()
 
     useLayoutEffect(()=>{
         const newExpPointArr = expPointArr.map(item=> item[Object.keys(item)[0]]).flat()
@@ -48,6 +75,16 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
         onClose()     
     }
 
+    function contarAteNumero(numero) {
+        if(numero==0) return [1]
+
+        const resultado = [];
+        for (let i = 1; i <= numero; i++) {
+            resultado.push(i);
+        }
+        return resultado;
+    }
+
     return (
 
         <Modal isOpen={isOpen} onClose={onClose} size="5xl">
@@ -68,12 +105,112 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                 </Text>
                                 <Textarea placeholder='Insira aqui a introdução do ponto de exploração...' value={introduction}
                                     onChange={(e)=> setIntroduction(e.target.value)} height={400} w={400}/>
-                                <Text mb={5}>
-                                    Agora adicione o texto do seu ponto de exploração.
+                                
+                                <Text mt={5} mb={2}>
+                                    Selecione o tipo do seu ponto de exploração.
                                 </Text>
-                                <Textarea placeholder='Insira aqui o texto do ponto de exploração...' value={text}
-                                    onChange={(e)=> setText(e.target.value)} height={400} w={400}/>
+                                <Select 
+                                    placeholder='Escolha o Tipo do Ponto de Exploração'
+                                    value={explorationPointType}
+                                    onChange={(e)=>setExplorationPointType(e.target.value)}
+                                >
+                                    <option value={'text'}>Texto Apenas</option>
+                                    <option value={'fight'}>Inimigos aparecem</option>
+                                    <option value={'individual-challange'}>Desafio de Rolagem individual</option>
+                                    <option value={'group-challange'}>Desafio de Rolagem em Grupo</option>    
+                                </Select>
+
+                                {explorationPointType === "text" &&
+                                <>
+                                    <Text mt={5} mb={2}>
+                                        Agora adicione o texto do seu ponto de exploração.
+                                    </Text>
+                                    <Textarea placeholder='Insira aqui o texto do ponto de exploração...' value={text}
+                                        onChange={(e)=> setText(e.target.value)} height={400} w={400}/>
+                                </>
+                                }
+                                {explorationPointType === "fight" &&
+                                    <>
+                                        <Text mt={5} mb={2}>
+                                            Selecione a quantidade de inimigos que irão aparecer.
+                                        </Text>
+                                        <HStack >
+                                            <Button {...dec}>-</Button>
+                                            <Input {...input} textAlign=''/>
+                                            <Button {...inc}>+</Button>
+                                        </HStack>
+                                        <Text mt={5} mb={2}>
+                                            Agora selecione quais inimigos irão aparecer.
+                                        </Text>
+                                    {contarAteNumero(parseInt(input.value)).map((item,index)=>(
+                                        <Select 
+                                            key={index}
+                                            placeholder='Escolha o inimigo que aparecerá'
+                                            value={enemyArr[index]}
+                                            onChange={(e)=>{
+                                                const newArr = [...enemyArr]
+                                                newArr[index] = e.target.value
+                                                setEnemyArr(newArr)
+                                            }}
+                                        >
+                                            <option value={'ze'}>Zé da Manga</option>
+                                            <option value={'sopa'}>Sopa pra nois</option>
+                                            <option value={'romario'}>Romario</option>
+                                        </Select>
+                                    ))}
+                                    </>
+                                }
+                                {(explorationPointType === "individual-challange" || explorationPointType === "group-challange" )&&
+                                    <>
+                                        <Flex direction="row" align='center'>
+                                            <NumberInput defaultValue={1} min={1} step={1}
+                                                value={diceAmount} onChange={(e)=>setDiceAmount(e)} 
+                                                w={50} mr={3}
+                                            >
+                                                <NumberInputField textAlign='center' pl={0} pr={0}/>
+                                            </NumberInput>
+                                            <Text>Quantidade de Dados</Text>
+                                        </Flex>
+                                        <Flex direction="row" align='center'>
+                                            <NumberInput defaultValue={1} min={1} step={1} max={6}
+                                                value={diceMinimumValue} onChange={(e)=>setDiceMinimumValue(e)}
+                                                w={50} mr={3}
+                                            >
+                                                <NumberInputField textAlign='center' pl={0} pr={0}/>
+                                            </NumberInput>
+                                            <Text>Valor Mínimo para o Sucesso</Text>
+                                        </Flex>
+                                        <Flex direction="row" align='center'>
+                                            <NumberInput defaultValue={1} min={1} step={1} max={diceAmount}
+                                                value={diceSuccessAmout} onChange={(e)=>setDiceSuccessAmout(e)}
+                                                w={50} mr={3}
+                                            >
+                                                <NumberInputField textAlign='center' pl={0} pr={0}/>
+                                            </NumberInput>
+                                            <Text>Quantidade de Dados com Valor Mínimo para Suceso</Text>
+                                        </Flex>
+                                    </>
+                                }
+                                        <Text mt={5} mb={2}>
+                                            Agora adicione o texto de sucesso do seu ponto de exploração.
+                                        </Text>
+                                        <Textarea placeholder='Insira aqui o texto de sucesso' value={successText}
+                                            onChange={(e)=> setSuccessText(e.target.value)} height={200} w={400}/>
+                                        <Text mt={1} fontSize={11}>
+                                            *Caso não exista texto de sucesso, ele será pulado ao criar o pdf do livro.
+                                        </Text>
+                                        <Text mt={5} mb={2}>
+                                            Agora adicione o texto de falha do seu ponto de exploração.
+                                        </Text>
+                                        <Textarea placeholder='Insira aqui o texto de falha' value={failText}
+                                            onChange={(e)=> setFailText(e.target.value)} height={200} w={400}/>
+                                        <Text mt={1} fontSize={11}>
+                                            *Caso não exista texto de falha, ele será pulado ao criar o pdf do livro.
+                                        </Text>
+
                             </Flex>
+
+
                             <Flex direction="column">
                                 <Text ml={5} mb={5}>Selecione pontos que serão pré-requisitos para esse ponto de exploração:</Text>
                                 <Flex overflow="auto" direction="column"
