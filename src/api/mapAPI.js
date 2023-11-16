@@ -23,7 +23,17 @@ export const getMap = async (mapId) => {
 
 export const addMap = async (name,xMapSize, yMapSize, mapImagebase64) => {
     try {
-        const response = await axios.post(`http://localhost:3030/map`, {name, mapText: "", mapImageUrl: "", xMapSize, yMapSize, mapImagebase64});
+        const response = await axios.post(`http://localhost:3030/map`, {name, mapText: "", mapImageUrl: "", xMapSize, yMapSize, mapImagebase64: mapImagebase64});
+        return response
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+export const deleteMap = async (mapId) => {
+    try {
+        const response = await axios.delete(`http://localhost:3030/map/${mapId}`);
         return response
     } catch (error) {
         console.error(error);
