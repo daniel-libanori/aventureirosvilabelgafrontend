@@ -1,4 +1,4 @@
-import { Image, Card, Flex, Text, Button, Icon } from '@chakra-ui/react'
+import { Image, Card, Flex, Text, Button, Icon, Link } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
@@ -24,7 +24,7 @@ export function Books() {
     const { isOpen: isOpenHelp, onOpen: onOpenHelp, onClose: onCloseHelp } = useDisclosure()
     const [helpDataKey, setHelpDataKey] = useState("")
     const navigate = useNavigate()
-    const { getGlobalUser } = useContext(GlobalUserContext)
+    const { getGlobalUser, logout } = useContext(GlobalUserContext)
     const [user, setUser] = useState({})
     const [books, setBooks] = useState([])
 
@@ -167,9 +167,12 @@ export function Books() {
                     </Flex>
                 </Flex>
 
-
-
-
+                <Flex justify={'space-between'} w={"100%"} pl={2} pr={2} pb={0.5} color={"#888"}>
+                    <Text fontStyle={"italic"}>Você está logado como: {user.email}</Text>
+                    <Text fontStyle={"italic"}>Avalie a nossa plataforma:{' '}
+                        <Link href='https://forms.gle/DYmw3VJEa4qnPvgDA' isExternal>Clique Aqui</Link>
+                    </Text>
+                </Flex>
             </Card>
         </Background>
     );

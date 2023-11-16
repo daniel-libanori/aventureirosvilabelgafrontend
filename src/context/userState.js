@@ -23,8 +23,15 @@ export const GlobalUserProvider = ({children}) => {
         return {}
     }
 
+    const logout = (navigate) =>{
+        setUser({})
+        localStorage.setItem(`AVBUser`, JSON.stringify({}))
+        navigate("/")
+    }
+
     return(
         <GlobalUserContext.Provider value={{
+            logout,
             setGlobalUser,
             getGlobalUser
         }}>
