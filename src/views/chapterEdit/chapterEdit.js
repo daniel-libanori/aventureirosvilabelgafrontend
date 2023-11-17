@@ -1,4 +1,4 @@
-import { Card, Flex, Text } from '@chakra-ui/react'
+import { Card, Flex, Icon, Text } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
@@ -9,13 +9,22 @@ import { AddExplorationPointModal } from './addExplorationPointModal';
 import { getChapter } from '../../api/chapterAPI';
 import { getMap } from '../../api/mapAPI'
 import { deleteExplorationPoint, getChapterExplorationPoints } from '../../api/explorationPointAPI';
-import {DeleteIcon} from '@chakra-ui/icons'
+import {DeleteIcon, QuestionOutlineIcon} from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom';
+import Background from '../../components/background';
+import Header from '../../components/header';
+import styled from 'styled-components';
+import { BsBook } from 'react-icons/bs';
+import { HelpModal } from '../../components/helpModal';
+import { AiOutlineAlignLeft } from "react-icons/ai";
 
 
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
-    const { isOpen: isOpenExpPoint, onOpen: onOpenExpPoint , onClose: onCloseExpPoint } = useDisclosure() //IntroductionModal
+    const { isOpen: isOpenExpPoint, onOpen: onOpenExpPoint , onClose: onCloseExpPoint } = useDisclosure()
+    const { isOpen: isOpenHelp, onOpen: onOpenHelp, onClose: onCloseHelp } = useDisclosure()
+
+    const [helpDataKey, setHelpDataKey] = useState("")
     const { chapterId } = useParams()
     const navigate = useNavigate()
 
@@ -121,7 +130,9 @@ export function ChapterEdit() {
     }
 
     return (
-        <Flex style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
+        <Background>
+            <Header/>
+
             {isOpen && <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} chapterData={chapterData}/>}
             {isOpenExpPoint &&
                 <AddExplorationPointModal 
@@ -137,7 +148,9 @@ export function ChapterEdit() {
                     selectedExplorationPoint={selectedExplorationPoint}
                     />
             }
-            <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={10}
+            <HelpModal isOpen={isOpenHelp} onOpen={onOpenHelp} onClose={onCloseHelp} helpDataKey={helpDataKey}/>
+
+            {/* <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={10}
                   right={0} w={320} h={170} borderTopLeftRadius={50} p={7}>
                 <Text fontSize='3xl'>Posição selecionada</Text>
                 <Text fontSize='5xl'>
@@ -150,20 +163,33 @@ export function ChapterEdit() {
                     
                     
                 </Text>
-            </Flex>
+            </Flex> */}
 
-            <Card minH={imageHeight + 1000} mt="5vh" mb="5vh">
+            <Card mb={[, , , 100, 300]} 
+                boxShadow="0px 5px 10px rgba(0, 0, 0, 0.5)"
+                w={[,,,"90vw","60vw"]} position={"absolute"} top={[,,,100,100]}>
                 <Flex direction='column' align="center" justify='space-evenly' h="100%" p={50}>
-                    <Text fontSize='8xl'>{chapterData.name} - Edição</Text>
+                    <Flex w="100%">
+                        <Text fontSize='5xl'>{chapterData.name} - Edição de Pontos de Exploração</Text>
+                    </Flex>
+                    
                     <Flex direction="column" w="100%" justify="center">
 
-                        <Card onClick={onOpen}
-                            h="150px" bg='#FBFBFF' flex align='center' direction='row' mb='15px' backgroundColor="green">
-                            <Flex direction='column' ml='15px'>
-                                <Text fontSize='3xl'>Adicionar/Editar Introdução do Capítulo</Text>
-                            </Flex>
-                        </Card>
+                        
+                        <CreateUpdateIntroductionButton onClick={onOpen}>
+                            <QuestionOutlineIcon cursor="pointer" 
+                                position="absolute" 
+                                boxSize={5} top={3} right={3} 
+                                onClick={(e)=>{
+                                    e.stopPropagation()
+                                    setHelpDataKey("newBook")
+                                    onOpenHelp()
+                                }}/>
 
+                            <Icon as={AiOutlineAlignLeft} mr={5}/>
+                            <Text>Adicionar/Editar Introdução do Capítulo</Text>
+                            
+                        </CreateUpdateIntroductionButton>
 
                         <Flex direction="row">
                            
@@ -232,9 +258,25 @@ export function ChapterEdit() {
 
                 </Flex>
             </Card>
-        </Flex>
+        </Background>
     );
 
 
 }
 
+const CreateUpdateIntroductionButton = styled(Flex)`
+    padding: 20px ;
+    border-radius: 20px;
+    background-color: rgba(99, 224, 111,1);
+    cursor: pointer;
+    border: 5px dashed #3fb54b;
+    align-items: center;
+    flex-direction: row;
+    color: white;
+    font-size: 30px;
+    line-height: 32px;
+    font-weight: 500;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    position: relative;
+`;

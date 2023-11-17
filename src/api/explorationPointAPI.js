@@ -11,12 +11,16 @@ export const getChapterExplorationPoints = async (chapterId, getBy) => {
 }
 
 
-export const createNewExplorationPoint = async (chapterId, name, code, xPosition, yPosition, pointIntroductionText, pointChallangeText, previousIds, nextsIds) => {
+export const createNewExplorationPoint = async (chapterId, 
+    name, code, xPosition, yPosition, pointIntroductionText, 
+    pointChallangeText, previousIds, nextsIds, type, successText,
+    failText, diceAmout, diceMinValueToSuccess, diceAmoutToSuccess) => {
     try {
         const response = await axios.post(`http://localhost:3030/chapter/${chapterId}/explorationPoint`,
             {
                 name, code, xPosition: parseInt(xPosition), yPosition: parseInt(yPosition), pointIntroductionText,
-                pointChallangeText, previousExplorationPointsId: previousIds, nextExplorationPointsId: nextsIds
+                pointChallangeText, previousExplorationPointsId: previousIds, nextExplorationPointsId: nextsIds,  type, successText,
+                failText, diceAmout, diceMinValueToSuccess, diceAmoutToSuccess
             });
         return response
     } catch (error) {
@@ -24,12 +28,16 @@ export const createNewExplorationPoint = async (chapterId, name, code, xPosition
     }
 }
 
-export const updateExplorationPoint = async (explorationPointId, name, code, xPosition, yPosition, pointIntroductionText, pointChallangeText, previousIds, nextsIds) => {
+export const updateExplorationPoint = async (explorationPointId, 
+    name, code, xPosition, yPosition, pointIntroductionText, 
+    pointChallangeText, previousIds, nextsIds, type, successText,
+    failText, diceAmout, diceMinValueToSuccess, diceAmoutToSuccess) => {
     try {
         const response = await axios.put(`http://localhost:3030/explorationPoint/${explorationPointId}`,
             {
                 name, code, xPosition: parseInt(xPosition), yPosition: parseInt(yPosition), pointIntroductionText,
-                pointChallangeText, previousExplorationPointsId: previousIds, nextExplorationPointsId: nextsIds
+                pointChallangeText, previousExplorationPointsId: previousIds, nextExplorationPointsId: nextsIds, type, successText,
+                failText, diceAmout, diceMinValueToSuccess, diceAmoutToSuccess
             });
         return response
     } catch (error) {

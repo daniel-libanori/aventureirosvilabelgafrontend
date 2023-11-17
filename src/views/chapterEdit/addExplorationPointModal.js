@@ -59,15 +59,28 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
             setIntroduction(selectedExplorationPoint.introduction)
             setText(selectedExplorationPoint.text)
             setPreRequisiteExpPoints(selectedExplorationPoint.previousRelation)
+
+            setExplorationPointType(selectedExplorationPoint.type)
+            setDiceAmount(selectedExplorationPoint.diceAmout)
+            setDiceMinimumValue(selectedExplorationPoint.diceMinValueToSuccess)
+            setDiceSuccessAmout(selectedExplorationPoint.diceAmoutToSuccess)
+            setSuccessText(selectedExplorationPoint.successText)
+            setFailText(selectedExplorationPoint.failText)
+            
         }
     },[])
 
     const onCreatePress = async () => {
+
         if(type === "add"){
-            const res = await createNewExplorationPoint(chapterId, name, code, x, y, introduction, text,preRequisiteExpPoints.map(e=>e.id), [])
+            const res = await createNewExplorationPoint(chapterId, name, code, x, y, 
+                introduction, text,preRequisiteExpPoints.map(e=>e.id), [], explorationPointType, successText,
+                failText, diceAmount, diceMinimumValue, diceSuccessAmout)
         }
         else if (type === "update"){
-            const res = await updateExplorationPoint(selectedExplorationPoint.id, name, code, x, y, introduction, text,preRequisiteExpPoints.map(e=>e.id), [])
+            const res = await updateExplorationPoint(selectedExplorationPoint.id, name, code, x, y, 
+                introduction, text,preRequisiteExpPoints.map(e=>e.id), [], explorationPointType, successText,
+                failText, diceAmount, diceMinimumValue, diceSuccessAmout)
         }
         navigate(0)
         onClose()     
@@ -113,7 +126,7 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                     onChange={(e)=>setExplorationPointType(e.target.value)}
                                 >
                                     <option value={'text'}>Texto Apenas</option>
-                                    <option value={'fight'}>Inimigos aparecem</option>
+                                    {/* <option value={'fight'}>Inimigos aparecem</option> */}
                                     <option value={'individual-challange'}>Desafio de Rolagem individual</option>
                                     <option value={'group-challange'}>Desafio de Rolagem em Grupo</option>    
                                 </Select>
