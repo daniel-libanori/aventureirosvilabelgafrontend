@@ -12,6 +12,7 @@ import Background from '../../components/background';
 
 import {QuestionOutlineIcon} from '@chakra-ui/icons'
 import { HelpModal } from '../../components/helpModal';
+import Header from '../../components/header';
 
 
 export function Login() {
@@ -45,6 +46,7 @@ export function Login() {
 
   return (
     <Background>
+      <Header/>
       <HelpModal isOpen={isOpenHelp} onOpen={onOpenHelp} onClose={onCloseHelp} helpDataKey={"login"}/>
       <Card display='flex' 
       boxShadow="0px 5px 10px rgba(0, 0, 0, 0.5)"

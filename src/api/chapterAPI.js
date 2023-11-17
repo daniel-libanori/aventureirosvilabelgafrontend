@@ -37,3 +37,12 @@ export const createNewChapter = async (bookId, name, mapId  ) => {
         console.error(error);
     }
 }
+
+export const deleteChapter = async (chapterId) => {
+    try {
+        const response = await axios.delete(`http://localhost:3030/chapter/${chapterId}`);
+        return response
+    } catch (error) {
+        console.error(error);
+    }
+}

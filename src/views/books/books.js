@@ -17,6 +17,8 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { BsPencilSquare } from "react-icons/bs";
 import { BsTrash3Fill } from "react-icons/bs";
 import { AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from "@chakra-ui/react";
+import  Header  from '../../components/header';
+
 
 export function Books() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -63,6 +65,9 @@ export function Books() {
 
     return (
         <Background style={{ width: "100vw", minHeight: "100vh" }} alignItems="center" justify={'center'} backgroundColor="#384ba1">
+
+            <Header/>
+
 
             <HelpModal isOpen={isOpenHelp} onOpen={onOpenHelp} onClose={onCloseHelp} helpDataKey={helpDataKey}/>
 
@@ -168,7 +173,6 @@ export function Books() {
                 </Flex>
 
                 <Flex justify={'space-between'} w={"100%"} pl={2} pr={2} pb={0.5} color={"#888"}>
-                    <Text fontStyle={"italic"}>Você está logado como: {user.email}</Text>
                     <Text fontStyle={"italic"}>Avalie a nossa plataforma:{' '}
                         <Link href='https://forms.gle/DYmw3VJEa4qnPvgDA' isExternal>Clique Aqui</Link>
                     </Text>

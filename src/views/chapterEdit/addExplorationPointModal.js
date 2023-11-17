@@ -46,10 +46,8 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
     const [failText, setFailText] = useState("")
 
   const inc = getIncrementButtonProps()
-  const dec = () => {
-    setEnemyArr(enemyArr.slice(0, -1))
-    getDecrementButtonProps()
-  }
+  const dec = getDecrementButtonProps()
+  
   const input = getInputProps()
 
     useLayoutEffect(()=>{
@@ -135,7 +133,7 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                             Selecione a quantidade de inimigos que irão aparecer.
                                         </Text>
                                         <HStack >
-                                            <Button {...dec}>-</Button>
+                                            <Button {...dec} onClick={()=>setEnemyArr(enemyArr.slice(0, -1))}>-</Button>
                                             <Input {...input} textAlign=''/>
                                             <Button {...inc}>+</Button>
                                         </HStack>
