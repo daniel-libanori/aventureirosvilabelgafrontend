@@ -1,5 +1,5 @@
 import { Button, Card, Flex, Image, Input, Text, useDisclosure } from '@chakra-ui/react'
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleLoginReq, handleSignUpReq } from '../../api/loginAPI';
 import { GlobalUserContext } from '../../context/userState';
@@ -19,7 +19,7 @@ export function Login() {
 
   const navigate = useNavigate();
   const [email, setEmail] = useState('')
-  const { setGlobalUser } = useContext(GlobalUserContext)
+  const { setGlobalUser, getGlobalUser } = useContext(GlobalUserContext)
   const { isOpen: isOpenHelp, onOpen: onOpenHelp, onClose: onCloseHelp } = useDisclosure()
 
   function isValidEmail(email) {
@@ -43,6 +43,13 @@ export function Login() {
     }
 
   }
+
+  useEffect(() => {
+    const user = getGlobalUser()
+    if (!!user?.email) {
+      navigate("/books")
+    }
+  }, [])
 
   return (
     <Background>

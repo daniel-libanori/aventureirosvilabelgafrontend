@@ -3,9 +3,9 @@ import React from 'react';
 import styled from 'styled-components';
 import PaperTexture from '../assets/paperbackgroundTexture.jpg'
 
-function Background({children, editChapter = false}) {
+function Background({children, editchapter = false}) {
     return (
-        <StyledFlex editChapter={editChapter}>
+        <StyledFlex editchapter={editchapter}>
             {children}
         </StyledFlex>
     );
@@ -16,7 +16,7 @@ export default Background;
 
 const StyledFlex = styled(Flex)`
     width: 100vw;
-    height: ${props => props.editChapter ? toString(window.innerHeight*3) + "px" : "100vh"};
+    height: ${props => !!props.editchapter ? window.innerHeight*3 + "px" : "100vh"};
     background-image: url(${PaperTexture});
     background-color: #bf6b3f;
     background-blend-mode: multiply;
