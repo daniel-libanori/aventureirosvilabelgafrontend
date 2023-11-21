@@ -15,6 +15,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { BsBook, BsPencilSquare, BsTrash3Fill } from "react-icons/bs";
 import { BsFileEarmarkMedical } from "react-icons/bs";
 import { HelpModal } from '../../components/helpModal';
+import {ArrowBackIcon} from '@chakra-ui/icons'
 
 export function Chapters() {
     const { isOpen, onOpen, onClose } = useDisclosure() //NewChapterModal
@@ -84,7 +85,8 @@ export function Chapters() {
 
             <Card mt={[, , , 100, 300]} mb={[, , , 100, 300]} 
                 boxShadow="0px 5px 10px rgba(0, 0, 0, 0.5)"
-                w={[,,,"70vw","60vw"]}>
+                w={[,,,"70vw","60vw"]} position={"relative"}>
+                <ArrowBackIcon pos={"absolute"} boxSize={12} top={2} color={"#888"} cursor={"pointer"} onClick={()=>navigate("/books")}/>
                 <Flex direction='column' align="center" pl={10} pt={5} pr={10} justify='space-evenly' h="100%">
                     <Flex direction="column" align={'flex-start'} w={"100%"}>
                         <Text fontSize='8xl'>{book?.name}</Text>
@@ -125,7 +127,7 @@ export function Chapters() {
                                             >
                                                 <Flex direction='column' ml='15px'>
                                                     <Text fontSize='xl'>{chapter.name}</Text>
-                                                    <Text fontSize='md' mb={2}>{chapter.explorationPoints.length} Capítulo{chapter.explorationPoints.length !== 1 ? "s" : ""}</Text>
+                                                    <Text fontSize='md' mb={2}>{chapter.explorationPoints.length} Ponto{chapter.explorationPoints.length !== 1 ? "s" : ""} de Exploração</Text>
                                                 </Flex>
                                                 <Flex direction={'row'} height={"100%"}>    
                                                     <Flex direction={'column'} justify={'space-evenly'}>

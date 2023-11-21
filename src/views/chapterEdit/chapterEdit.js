@@ -1,4 +1,4 @@
-import { Card, Flex, Icon, Text } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button,Card, Flex, Icon, Text } from '@chakra-ui/react'
 import {
     useDisclosure
 } from '@chakra-ui/react'
@@ -17,15 +17,17 @@ import styled from 'styled-components';
 import { BsBook } from 'react-icons/bs';
 import { HelpModal } from '../../components/helpModal';
 import { AiOutlineAlignLeft } from "react-icons/ai";
+import {ArrowBackIcon} from '@chakra-ui/icons'
 
 
 export function ChapterEdit() { 
     const { isOpen, onOpen, onClose } = useDisclosure() //IntroductionModal
     const { isOpen: isOpenExpPoint, onOpen: onOpenExpPoint , onClose: onCloseExpPoint } = useDisclosure()
     const { isOpen: isOpenHelp, onOpen: onOpenHelp, onClose: onCloseHelp } = useDisclosure()
+    const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure();
 
     const [helpDataKey, setHelpDataKey] = useState("")
-    const { chapterId } = useParams()
+    const { chapterId, bookId } = useParams()
     const navigate = useNavigate()
 
     const [chapterData, setChapterData] = useState({})
@@ -36,7 +38,7 @@ export function ChapterEdit() {
     const [imageHeight, setImageHeight] = useState(0);
     const [expPointArr, setExpPointArr] = useState([]);
     const [selectedSquare, setSelectedSquare] = useState(0)
-    
+
     const [selectedExplorationPoint, setSelectedExplorationPoint] = useState({})
     const [updateOrAddExpPointModalType, setUpdateOrAddExpPointModalType] = useState("add") //add or update
 
@@ -124,13 +126,13 @@ export function ChapterEdit() {
         onOpenExpPoint()
     }
 
-    const onDeletePress = async (expPoint) => {
-        const res = await deleteExplorationPoint(expPoint.id)
+    const handleDelete = async () => {
+        const res = await deleteExplorationPoint(selectedExplorationPoint.id)
         navigate(0)   
     }
 
     return (
-        <Background>
+        <Background editchapter={true}>
             <Header/>
 
             {isOpen && <IntroductionModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} chapterData={chapterData}/>}
@@ -150,6 +152,30 @@ export function ChapterEdit() {
             }
             <HelpModal isOpen={isOpenHelp} onOpen={onOpenHelp} onClose={onCloseHelp} helpDataKey={helpDataKey}/>
 
+            { isOpenDelete &&
+            <AlertDialog isOpen={isOpenDelete} onClose={onCloseDelete}>
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                        Deletar Ponto de Exploração
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                        Você tem certeza? Essa ação não poderá ser desfeita.
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                        <Button onClick={onCloseDelete}>
+                        Cancelar
+                        </Button>
+                        <Button colorScheme="red" onClick={handleDelete} ml={3}>
+                        Deletar
+                        </Button>
+                    </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>}
+
             {/* <Flex bg={'white'} pos="fixed" bottom={0} direction="column" zIndex={10}
                   right={0} w={320} h={170} borderTopLeftRadius={50} p={7}>
                 <Text fontSize='3xl'>Posição selecionada</Text>
@@ -168,6 +194,8 @@ export function ChapterEdit() {
             <Card mb={[, , , 100, 300]} 
                 boxShadow="0px 5px 10px rgba(0, 0, 0, 0.5)"
                 w={[,,,"90vw","60vw"]} position={"absolute"} top={[,,,100,100]}>
+                <ArrowBackIcon pos={"absolute"} boxSize={12} top={2} color={"#888"} cursor={"pointer"} onClick={()=>navigate("..", {relative: "path"})}/>
+
                 <Flex direction='column' align="center" justify='space-evenly' h="100%" p={50}>
                     <Flex w="100%">
                         <Text fontSize='5xl'>{chapterData.name} - Edição de Pontos de Exploração</Text>
@@ -182,7 +210,7 @@ export function ChapterEdit() {
                                 boxSize={5} top={3} right={3} 
                                 onClick={(e)=>{
                                     e.stopPropagation()
-                                    setHelpDataKey("newBook")
+                                    setHelpDataKey("chapterEdit")
                                     onOpenHelp()
                                 }}/>
 
@@ -206,11 +234,24 @@ export function ChapterEdit() {
                                                 zIndex={2} align="center" justify="center" key={num} onClick={()=>{num!== selectedSquare ? setSelectedSquare(num) : setSelectedSquare(0)}}
                                             >
                                                 { expPointArr?.some(elm => num in elm) &&
-                                                    <Flex h={(imageHeight/linhasMap)*0.5} w={(imageWidth/colunasMap)*0.5} bgColor={selectedSquare==num ? "rgba(255,0,0,0.7)" : "rgba(255,255,0,0.7)" }
+                                                    <Flex h={(imageHeight/linhasMap)*0.8} w={(imageWidth/colunasMap)*0.8} bgColor={selectedSquare==num ? "rgba(255,0,0,0.7)" : "rgba(255,255,0,0.7)" }
                                                         borderRadius={100} display="flex" align="center" justify="center">
-                                                            <Text fontWeight={500}>
+                                                            {/* <Text fontWeight={500}>
                                                                 {expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(num)][num].length}
-                                                            </Text>
+                                                            </Text> */}
+                                                            <Flex direction='column'>
+                                                            {  expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(num)][num].map((e,idx)=>{
+                                                                
+                                                                return(
+                                                                    <Text fontWeight={500} key={idx}>
+                                                                        {e.code}
+                                                                    </Text>
+                                                                )
+                                                            
+                                                                })
+                                                            }
+                                                            </Flex>
+                                                            
                                                     </Flex>
                                                 }
                                             </Flex>
@@ -238,8 +279,12 @@ export function ChapterEdit() {
                                 <Flex key={e.id} border="1px solid black" 
                                     borderRadius={10} m={5} onClick={()=>handleSelectExplorationPointToOpenUpdateModal(e)}
                                     direction="row" align="center" justify="space-between">
-                                    <Text fontSize={25} p={5}>{e.name}</Text>
-                                    <DeleteIcon boxSize={8} mr={5} onClick={(event)=>{event.stopPropagation(); onDeletePress(e)}} zIndex={10}/>
+                                    <Flex cursor={"pointer"} >
+                                        <Text fontSize={25} pt={5} pb={5} pl={5} fontWeight={600}>{e.code}</Text>
+                                        {!!e.name && <Text fontSize={25} pt={5} pb={5} pl={1}>- {e.name}</Text>}
+                                    </Flex>
+
+                                    <DeleteIcon cursor={"pointer"} boxSize={8} mr={5} onClick={(event)=>{event.stopPropagation(); setSelectedExplorationPoint(e); onOpenDelete()}} zIndex={10}/>
                                 </Flex>
                             ))}
 

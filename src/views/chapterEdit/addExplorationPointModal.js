@@ -61,9 +61,9 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
             setPreRequisiteExpPoints(selectedExplorationPoint.previousRelation)
 
             setExplorationPointType(selectedExplorationPoint.type)
-            setDiceAmount(selectedExplorationPoint.diceAmout)
-            setDiceMinimumValue(selectedExplorationPoint.diceMinValueToSuccess)
-            setDiceSuccessAmout(selectedExplorationPoint.diceAmoutToSuccess)
+            setDiceAmount(parseInt(selectedExplorationPoint.diceAmout))
+            setDiceMinimumValue(parseInt(selectedExplorationPoint.diceMinValueToSuccess))
+            setDiceSuccessAmout(parseInt(selectedExplorationPoint.diceAmoutToSuccess))
             setSuccessText(selectedExplorationPoint.successText)
             setFailText(selectedExplorationPoint.failText)
             
@@ -75,12 +75,12 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
         if(type === "add"){
             const res = await createNewExplorationPoint(chapterId, name, code, x, y, 
                 introduction, text,preRequisiteExpPoints.map(e=>e.id), [], explorationPointType, successText,
-                failText, diceAmount, diceMinimumValue, diceSuccessAmout)
+                failText, parseInt(diceAmount), parseInt(diceMinimumValue), parseInt(diceSuccessAmout))
         }
         else if (type === "update"){
             const res = await updateExplorationPoint(selectedExplorationPoint.id, name, code, x, y, 
                 introduction, text,preRequisiteExpPoints.map(e=>e.id), [], explorationPointType, successText,
-                failText, diceAmount, diceMinimumValue, diceSuccessAmout)
+                failText, parseInt(diceAmount), parseInt(diceMinimumValue), parseInt(diceSuccessAmout))
         }
         navigate(0)
         onClose()     
@@ -96,6 +96,25 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
         return resultado;
     }
 
+    function contarLetrasAteNumero(numero) {
+        const resultado = [];
+        const alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        
+        for (let i = 1; i <= numero; i++) {
+          let atual = i - 1;
+          let contagem = '';
+          
+          do {
+            contagem = alfabeto[atual % 26] + contagem;
+            atual = Math.floor(atual / 26) - 1;
+          } while (atual >= 0);
+          
+          resultado.push(contagem);
+        }
+        
+        return resultado[resultado.length - 1];
+    }
+
     return (
 
         <Modal isOpen={isOpen} onClose={onClose} size="5xl">
@@ -105,14 +124,16 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                 <ModalCloseButton />
                 <ModalBody>
                     <Flex direction="column">
-                        <Text>Digite o nome do seu ponto de exploração</Text>
+                        <Text>Digite o código do seu ponto de exploração (obrigatório)</Text>
+                        <Input onChange={e=>setCode(e.target.value)} value={code} placeholder='Código do seu ponto de exploração...'/>
+                        
+                        <Text mt={5}>Digite o nome do seu ponto de exploração</Text>
                         <Input onChange={e=>setName(e.target.value)} value={name} placeholder='Nome do seu ponto de exploração...'/>
-                        <Text>Digite o código do seu ponto de exploração</Text>
-                        <Input onChange={e=>setCode(e.target.value)} value={code} placeholder='Códgio do seu ponto de exploração...'/>
+               
                         <Flex direction="row" mt={10}>
                             <Flex direction="column">
                                 <Text mb={5}>
-                                    Agora adicione o texto de introdução do seu ponto de exploração.
+                                    Agora adicione o texto ao seu ponto de exploração.
                                 </Text>
                                 <Textarea placeholder='Insira aqui a introdução do ponto de exploração...' value={introduction}
                                     onChange={(e)=> setIntroduction(e.target.value)} height={400} w={400}/>
@@ -202,6 +223,8 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                         </Flex>
                                     </>
                                 }
+                                { (explorationPointType === "individual-challange" || explorationPointType === "group-challange" ) &&
+                                    <>
                                         <Text mt={5} mb={2}>
                                             Agora adicione o texto de sucesso do seu ponto de exploração.
                                         </Text>
@@ -210,14 +233,20 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                         <Text mt={1} fontSize={11}>
                                             *Caso não exista texto de sucesso, ele será pulado ao criar o pdf do livro.
                                         </Text>
+                                    </>
+                                }
+                                {explorationPointType === "individual-challange" &&
+                                    <>
                                         <Text mt={5} mb={2}>
-                                            Agora adicione o texto de falha do seu ponto de exploração.
+                                            Agora adicione o texto de fracasso do seu ponto de exploração.
                                         </Text>
-                                        <Textarea placeholder='Insira aqui o texto de falha' value={failText}
+                                        <Textarea placeholder='Insira aqui o texto de fracasso' value={failText}
                                             onChange={(e)=> setFailText(e.target.value)} height={200} w={400}/>
                                         <Text mt={1} fontSize={11}>
-                                            *Caso não exista texto de falha, ele será pulado ao criar o pdf do livro.
+                                            *Caso não exista texto de fracasso, ele será pulado ao criar o pdf do livro.
                                         </Text>
+                                    </>
+                                }
 
                             </Flex>
 
@@ -246,8 +275,12 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                                 }
                                             }}
                                             >
-                                            <Text>{expPoint.name}</Text>
-                                            <Text>x:{expPoint.xPosition} y:{expPoint.yPosition}</Text>
+                                            <Flex>
+                                                <Text fontWeight={600}>{expPoint.code} </Text>
+                                                {!!expPoint.name &&<Text ml={1}>- {expPoint.name}</Text>}
+                                            </Flex>
+                                            
+                                            <Text>Posição: <b>{contarLetrasAteNumero(expPoint.xPosition)}{expPoint.yPosition}</b> </Text>
                                         </Flex>
                                     )})
 
@@ -265,7 +298,7 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
 
                 <ModalFooter mt={10} display='flex' justifyContent='flex-end'>
 
-                <Button colorScheme='blue' mr={3} onClick={onCreatePress}>
+                <Button colorScheme='blue' mr={3} onClick={onCreatePress} isDisabled={code.length===0}>
                     {type === "add" ? "Adicionar Ponto de Exploracao" : "Atualizar Ponto de Exploracao"}
                 </Button>
                    

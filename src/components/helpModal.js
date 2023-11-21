@@ -22,7 +22,15 @@ const helpData = {
         title: "Dashboard",
         text: "Esse é o Dashboard, esta página te permite ter uma visão geral dos seus livros criados. Você pode selecionar um livro para continuar a edita-lo, gerar o PDF de um dos livros ou criar um novo livro.",
     },
-
+    newChapter:{
+        title: "Criar novo capítulo",
+        text: "Para criar um novo capítulo, digite o nome do capítulo, escolha um mapa e clique no botão 'Criar'.",
+    },
+    chapterEdit:{
+        title: "Editar capítulo",
+        text: "Nessa página você pode editar o capítulo selecionado, mudando o nome e adicionando/editando a introdução do capítulo",
+    },
+    
     
 
 
