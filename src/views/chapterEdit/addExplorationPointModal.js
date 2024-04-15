@@ -1,4 +1,4 @@
-import { Text, Button, Input, Select, Textarea, HStack, useNumberInput, NumberInput, NumberInputField } from '@chakra-ui/react'
+import { Text, Button, Input, Select, Textarea, HStack, useNumberInput, NumberInput, NumberInputField, useDisclosure } from '@chakra-ui/react'
 import {
     Flex,
     Modal,
@@ -12,6 +12,8 @@ import {
 import { useLayoutEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createNewExplorationPoint, updateExplorationPoint } from '../../api/explorationPointAPI';
+import { HelpModal } from '../../components/helpModal';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 
 export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPointArr, type, selectedExplorationPoint}) {
@@ -23,6 +25,8 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
     const [ code, setCode ] = useState("")
     const [ explorationPointType, setExplorationPointType ] = useState("text")
     const navigate = useNavigate()
+    const { isOpen: isOpenHelp, onOpen: onOpenHelp, onClose: onCloseHelp } = useDisclosure()
+    const [helpDataKey, setHelpDataKey] = useState("")
 
     const [formatedExpPointArr, setFormatedExpPointArr] = useState([])
 
@@ -116,7 +120,9 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
     }
 
     return (
-
+        <>
+        <HelpModal isOpen={isOpenHelp} onOpen={onOpenHelp} onClose={onCloseHelp} helpDataKey={helpDataKey}/>
+        
         <Modal isOpen={isOpen} onClose={onClose} size="5xl">
             <ModalOverlay />
             <ModalContent>
@@ -136,31 +142,38 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                     Agora adicione o texto ao seu ponto de exploração.
                                 </Text>
                                 <Textarea placeholder='Insira aqui a introdução do ponto de exploração...' value={introduction}
-                                    onChange={(e)=> setIntroduction(e.target.value)} height={400} w={400}/>
+                                    onChange={(e)=> setIntroduction(e.target.value)} height={200} w={400}/>
                                 
                                 <Text mt={5} mb={2}>
                                     Selecione o tipo do seu ponto de exploração.
                                 </Text>
-                                <Select 
-                                    placeholder='Escolha o Tipo do Ponto de Exploração'
-                                    value={explorationPointType}
-                                    onChange={(e)=>setExplorationPointType(e.target.value)}
-                                >
-                                    <option value={'text'}>Texto Apenas</option>
-                                    {/* <option value={'fight'}>Inimigos aparecem</option> */}
-                                    <option value={'individual-challange'}>Desafio de Rolagem individual</option>
-                                    <option value={'group-challange'}>Desafio de Rolagem em Grupo</option>    
-                                </Select>
+                                
+                                <div style={{display: 'flex', alignItems:'center', gap: 10}}>
+                                    <Select 
+                                        placeholder='Escolha o Tipo do Ponto de Exploração'
+                                        value={explorationPointType}
+                                        onChange={(e)=>setExplorationPointType(e.target.value)}
+                                    >
+                                        <option value={'text'}>Texto Apenas</option>
+                                        {/* <option value={'fight'}>Inimigos aparecem</option> */}
+                                        <option value={'individual-challange'}>Desafio de Rolagem individual</option>
+                                        <option value={'group-challange'}>Desafio de Rolagem em Grupo</option>    
+                                    </Select>
+                                
+                                    <QuestionOutlineIcon cursor="pointer" 
+                                         
+                                        z={10} color="black"
+                                        boxSize={5} top={4} right={-6} 
+                                        onClick={(e)=>{
+                                            e.stopPropagation()
+                                            setHelpDataKey("expPointTypes")
+                                            onOpenHelp()
+                                        }}/>
+                                </div>
+                                
 
-                                {explorationPointType === "text" &&
-                                <>
-                                    <Text mt={5} mb={2}>
-                                        Agora adicione o texto do seu ponto de exploração.
-                                    </Text>
-                                    <Textarea placeholder='Insira aqui o texto do ponto de exploração...' value={text}
-                                        onChange={(e)=> setText(e.target.value)} height={400} w={400}/>
-                                </>
-                                }
+
+                                
                                 {explorationPointType === "fight" &&
                                     <>
                                         <Text mt={5} mb={2}>
@@ -252,7 +265,7 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
 
 
                             <Flex direction="column">
-                                <Text ml={5} mb={5}>Selecione pontos que serão pré-requisitos para esse ponto de exploração:</Text>
+                                <Text ml={5} mb={5}>Selecione o ponto que será pré-requisito para esse ponto de exploração:</Text>
                                 <Flex overflow="auto" direction="column"
                                     border="1px solid black" w={550} h={300} ml={5}>
                                     {formatedExpPointArr.map((expPoint,index)=>{
@@ -270,7 +283,7 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                                                     setPreRequisiteExpPoints(newArr)
                                                 }
                                                 else{
-                                                    setPreRequisiteExpPoints([...preRequisiteExpPoints, expPoint])
+                                                    setPreRequisiteExpPoints([expPoint])
                                                     
                                                 }
                                             }}
@@ -305,7 +318,7 @@ export function AddExplorationPointModal({ isOpen, onOpen, onClose, x, y, expPoi
                 </ModalFooter>
             </ModalContent>
         </Modal>
-
+        </>
     );
 }
 

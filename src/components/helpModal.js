@@ -30,6 +30,14 @@ const helpData = {
         title: "Editar capítulo",
         text: "Nessa página você pode editar o capítulo selecionado, mudando o nome e adicionando/editando a introdução do capítulo",
     },
+    expPointTypes:{
+        title: "Tipos de pontos de exploração",
+        text: `Podem haver os seguintes tipos de ponto de exporação: 
+            <br/><br/> <b>Apenas Texto</b> - Ponto de exploração que contém apenas texto. 
+            <br/> <b>Desafio de Rolagem individual</b> - Desafio de rolagem de dados de apenas um jogador. 
+            <br/> <b>Desafio de Rolagem em Grupo</b> - Desafio de rolagem de dados de vários jogadores, que pode ser realizado ao longo de várias rodadas para andar com o marcador do trem. 
+            <br/> <b>Inimigos aparecem</b> - Selecione uma carta de inimigo para enfrentar.`,
+    }
     
     
 
@@ -46,9 +54,7 @@ export function HelpModal({ isOpen, onOpen, onClose, helpDataKey }) {
                 <ModalCloseButton />
                 <ModalBody>
                     
-                    <Text>
-                        {helpData[helpDataKey]?.text}
-                    </Text>
+                <div dangerouslySetInnerHTML={{ __html: helpData[helpDataKey]?.text }} />
 
                 </ModalBody>
 
