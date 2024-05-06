@@ -1,1 +1,2 @@
-export { AddMap } from './addMap'
+export { AddMap } from "./addMap";
+export { AddEnemy } from "./addEnemy";
