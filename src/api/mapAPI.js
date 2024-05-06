@@ -3,7 +3,7 @@ import axios from "axios";
 export const getAllMaps = async () => {
   try {
     const response = await axios.get(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//maps`
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/maps`
     );
     return response;
   } catch (error) {
@@ -14,7 +14,7 @@ export const getAllMaps = async () => {
 export const getMap = async (mapId) => {
   try {
     const response = await axios.get(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//map/${mapId}`
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/map/${mapId}`
     );
     return response;
   } catch (error) {
@@ -25,7 +25,7 @@ export const getMap = async (mapId) => {
 export const addMap = async (name, xMapSize, yMapSize, mapImagebase64) => {
   try {
     const response = await axios.post(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//map`,
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/map`,
       {
         name,
         mapText: "",
@@ -44,7 +44,7 @@ export const addMap = async (name, xMapSize, yMapSize, mapImagebase64) => {
 export const deleteMap = async (mapId) => {
   try {
     const response = await axios.delete(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//map/${mapId}`
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/map/${mapId}`
     );
     return response;
   } catch (error) {

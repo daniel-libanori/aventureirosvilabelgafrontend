@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/
+//https://vila-belga-backend-9c5dfe0034fe.herokuapp.com
 //http://localhost:3030
 
 export const getAllEnemies = async (userId) => {

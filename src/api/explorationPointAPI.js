@@ -3,7 +3,7 @@ import axios from "axios";
 export const getChapterExplorationPoints = async (chapterId, getBy) => {
   try {
     const response = await axios.get(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//chapter/${chapterId}/explorationPoints/`,
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/chapter/${chapterId}/explorationPoints/`,
       { params: { getby: getBy } }
     );
     return response;
@@ -33,7 +33,7 @@ export const createNewExplorationPoint = async (
 ) => {
   try {
     const response = await axios.post(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//chapter/${chapterId}/explorationPoint`,
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/chapter/${chapterId}/explorationPoint`,
       {
         name,
         code,
@@ -80,7 +80,7 @@ export const updateExplorationPoint = async (
 ) => {
   try {
     const response = await axios.put(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//explorationPoint/${explorationPointId}`,
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/explorationPoint/${explorationPointId}`,
       {
         name,
         code,
@@ -109,7 +109,7 @@ export const updateExplorationPoint = async (
 export const deleteExplorationPoint = async (explorationPointId) => {
   try {
     const response = await axios.delete(
-      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//explorationPoint/${explorationPointId}`
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/explorationPoint/${explorationPointId}`
     );
     return response;
   } catch (error) {
