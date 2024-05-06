@@ -13,15 +13,15 @@ import { GlobalContext } from "../../context/globalState";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateChapter } from "../../api/chapterAPI";
 
-export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
-  const [introduction, setIntroduction] = useState(chapterData.introduction);
+export function ChapterNameModal({ isOpen, onOpen, onClose, chapterData }) {
+  const [chapterName, setChapterName] = useState("");
   const { bookId, chapterId } = useParams();
   const navigate = useNavigate();
 
   const onCreatePress = async () => {
     const res = await updateChapter(
       chapterId,
-      introduction,
+      chapterName,
       bookId,
       chapterData.mapId
     );
@@ -30,7 +30,7 @@ export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
   };
 
   useLayoutEffect(() => {
-    setIntroduction(chapterData.introduction);
+    setChapterName(chapterData.name);
   }, []);
 
   return (
@@ -40,17 +40,21 @@ export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
         <ModalHeader>Editar Capítulo</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={5}>Adicione o texto de introdução do seu capítulo.</Text>
-          <Textarea
-            placeholder="Insira aqui a introdução do seu capítulo..."
-            value={introduction}
-            onChange={(e) => setIntroduction(e.target.value)}
-            height={400}
+          <Text mb={5}>Título do Capitulo</Text>
+          <Input
+            placeholder="Insira aqui a nome do seu capítulo..."
+            value={chapterName}
+            onChange={(e) => setChapterName(e.target.value)}
           />
         </ModalBody>
 
         <ModalFooter mt={10} display="flex" justifyContent="flex-end">
-          <Button colorScheme="blue" mr={3} onClick={onCreatePress}>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={onCreatePress}
+            isDisabled={chapterName == ""}
+          >
             Finalizar Edição
           </Button>
         </ModalFooter>

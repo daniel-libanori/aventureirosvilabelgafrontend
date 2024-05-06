@@ -12,39 +12,37 @@ import { useContext, useLayoutEffect, useState } from "react";
 import { GlobalContext } from "../../context/globalState";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateChapter } from "../../api/chapterAPI";
+import { updateBook } from "../../api/bookAPI";
 
-export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
-  const [introduction, setIntroduction] = useState(chapterData.introduction);
-  const { bookId, chapterId } = useParams();
+export function BookFinalModal({ isOpen, onOpen, onClose, book }) {
+  const [final, setFinal] = useState(book.bookFinal);
   const navigate = useNavigate();
 
   const onCreatePress = async () => {
-    const res = await updateChapter(
-      chapterId,
-      introduction,
-      bookId,
-      chapterData.mapId
-    );
+    const res = await updateBook(book.id, book.name, book.bookIntro, final);
     await navigate(0);
     onClose();
   };
 
   useLayoutEffect(() => {
-    setIntroduction(chapterData.introduction);
+    setFinal(book.bookFinal);
   }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Editar Capítulo</ModalHeader>
+        <ModalHeader>Editar Fim do Capítulo</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={5}>Adicione o texto de introdução do seu capítulo.</Text>
+          <Text mb={5}>
+            Agora adicione o texto que aparecerá após a conclusão do seu
+            capítulo.
+          </Text>
           <Textarea
-            placeholder="Insira aqui a introdução do seu capítulo..."
-            value={introduction}
-            onChange={(e) => setIntroduction(e.target.value)}
+            placeholder="Insira aqui o final do seu capítulo..."
+            value={final}
+            onChange={(e) => setFinal(e.target.value)}
             height={400}
           />
         </ModalBody>

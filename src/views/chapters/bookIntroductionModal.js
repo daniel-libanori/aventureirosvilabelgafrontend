@@ -12,32 +12,32 @@ import { useContext, useLayoutEffect, useState } from "react";
 import { GlobalContext } from "../../context/globalState";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateChapter } from "../../api/chapterAPI";
+import { updateBook } from "../../api/bookAPI";
 
-export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
-  const [introduction, setIntroduction] = useState(chapterData.introduction);
-  const { bookId, chapterId } = useParams();
+export function BookIntroductionModal({ isOpen, onOpen, onClose, book }) {
+  const [introduction, setIntroduction] = useState(book.bookIntro);
   const navigate = useNavigate();
 
   const onCreatePress = async () => {
-    const res = await updateChapter(
-      chapterId,
+    const res = await updateBook(
+      book.id,
+      book.name,
       introduction,
-      bookId,
-      chapterData.mapId
+      book.bookFinal
     );
     await navigate(0);
     onClose();
   };
 
   useLayoutEffect(() => {
-    setIntroduction(chapterData.introduction);
+    setIntroduction(book.bookIntro);
   }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Editar Capítulo</ModalHeader>
+        <ModalHeader>Editar Prólogo</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={5}>Adicione o texto de introdução do seu capítulo.</Text>
