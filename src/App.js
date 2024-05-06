@@ -56,10 +56,10 @@ const router = createBrowserRouter([
     element: <Chapter />,
     errorElement: <Error />,
   },
-  {
-    path: "/pdf",
-    element: <MyDocument />,
-  },
+  // {
+  //   path: "/pdf",
+  //   element: <MyDocument />,
+  // },
 ]);
 
 function App() {

@@ -1,11 +1,13 @@
 import axios from "axios";
 
 //https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/
-//http://localhost:3030
+//https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/
 
 export const getBook = async (bookId) => {
   try {
-    const response = await axios.get(`http://localhost:3030/book/${bookId}`);
+    const response = await axios.get(
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//book/${bookId}`
+    );
     return response;
   } catch (error) {
     console.error(error);
@@ -15,7 +17,7 @@ export const getBook = async (bookId) => {
 export const getMyBooks = async (userId) => {
   try {
     const response = await axios.get(
-      `http://localhost:3030/user/${userId}/books`
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//user/${userId}/books`
     );
     return response;
   } catch (error) {
@@ -26,7 +28,7 @@ export const getMyBooks = async (userId) => {
 export const createNewBook = async (userId, name) => {
   try {
     const response = await axios.post(
-      `http://localhost:3030/user/${userId}/book`,
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//user/${userId}/book`,
       { name: name }
     );
     return response;
@@ -37,11 +39,14 @@ export const createNewBook = async (userId, name) => {
 
 export const updateBook = async (bookId, name, bookIntro, bookFinal) => {
   try {
-    const response = await axios.put(`http://localhost:3030/book/${bookId}`, {
-      name: name,
-      bookIntro,
-      bookFinal,
-    });
+    const response = await axios.put(
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//book/${bookId}`,
+      {
+        name: name,
+        bookIntro,
+        bookFinal,
+      }
+    );
     return response;
   } catch (error) {
     console.error(error);
@@ -50,7 +55,9 @@ export const updateBook = async (bookId, name, bookIntro, bookFinal) => {
 
 export const deleteBook = async (bookId) => {
   try {
-    const response = await axios.delete(`http://localhost:3030/book/${bookId}`);
+    const response = await axios.delete(
+      `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com//book/${bookId}`
+    );
     return response;
   } catch (error) {
     console.error(error);
