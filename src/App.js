@@ -13,7 +13,7 @@ import {
 } from "./views";
 import { GlobalProvider } from "./context/globalState";
 import { GlobalUserProvider } from "./context/userState";
-import MyDocument from "./views/pdf/pdf";
+// import MyDocument from "./views/pdf/pdf";
 
 const router = createBrowserRouter([
   {
