@@ -86,10 +86,11 @@ export function AddExplorationPointModal({
 
   const [enemyDataArr, setEnemyDataArr] = useState([]);
   const [enemyArr, setEnemyArr] = useState([]);
+  const [numberInputValue, setNumberInputValue] = useState(1);
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
-      defaultValue: 1,
+      value: numberInputValue,
       min: 1,
       max: 5,
       precision: 0,
@@ -130,6 +131,9 @@ export function AddExplorationPointModal({
     setFormatedExpPointArr(newExpPointArr);
     if (type === "update") {
       setEnemyArr(JSON.parse(selectedExplorationPoint.enemiesArray));
+      setNumberInputValue(
+        JSON.parse(selectedExplorationPoint.enemiesArray).length
+      );
 
       setName(selectedExplorationPoint.name);
       setCode(selectedExplorationPoint.code);
