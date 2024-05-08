@@ -48,6 +48,8 @@ import EnemyI01 from "../../assets/enemy/I01.jpg";
 import EnemyI02 from "../../assets/enemy/I02.jpg";
 import EnemyI03 from "../../assets/enemy/I03.jpg";
 import EnemyI04 from "../../assets/enemy/I04.jpg";
+import { FaFlag } from "react-icons/fa";
+import { updateChapter } from "../../api/chapterAPI";
 
 export function AddExplorationPointModal({
   isOpen,
@@ -58,6 +60,7 @@ export function AddExplorationPointModal({
   expPointArr,
   type,
   selectedExplorationPoint,
+  chapterData,
 }) {
   const [introduction, setIntroduction] = useState("");
   const [text, setText] = useState("");
@@ -116,7 +119,6 @@ export function AddExplorationPointModal({
     const getEnemiesData = async () => {
       const enemies = await getAllEnemies();
       setEnemyDataArr(enemies?.data);
-      console.log(enemies?.data);
     };
     getEnemiesData();
   }, []);
@@ -239,6 +241,20 @@ export function AddExplorationPointModal({
 
   const handleDelete = async () => {
     const res = await deleteExplorationPoint(selectedExplorationPoint.id);
+    navigate(0);
+  };
+
+  const handleNewStartPoint = async () => {
+    const res = await updateChapter(
+      chapterData.id,
+      chapterData.name,
+      chapterData.introduction,
+      chapterData.bookId,
+      chapterData.mapId,
+      chapterData.final,
+      y,
+      x
+    );
     navigate(0);
   };
 
@@ -366,6 +382,33 @@ export function AddExplorationPointModal({
                     Adicionar Inimigo
                   </Text>
                 </CreateUpdatePointButton>
+              </Flex>
+
+              <Flex justify="center">
+                <StartPointButton
+                  onClick={handleNewStartPoint}
+                  borderColor="#e8741c"
+                  bgColor="#fa8f3e"
+                  flex="1"
+                >
+                  <QuestionOutlineIcon
+                    cursor="pointer"
+                    position="absolute"
+                    boxSize={5}
+                    top={3}
+                    right={3}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setHelpDataKey("chapterEdit");
+                      onOpenHelp();
+                    }}
+                  />
+
+                  <Icon as={FaFlag} w={20} h={20} />
+                  <Text fontSize="2xl" align="center">
+                    Fazer desse o Ponto Inicial do Capítulo
+                  </Text>
+                </StartPointButton>
               </Flex>
             </Flex>
           </ModalContent>
@@ -740,6 +783,24 @@ const CreateUpdatePointButton = styled(Flex)`
   line-height: 32px;
   font-weight: 500;
   margin-right: 20px;
+  margin-bottom: 30px;
+  position: relative;
+`;
+
+const StartPointButton = styled(Flex)`
+  padding: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  border-width: 5px;
+  border-style: dashed;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 30px;
+  line-height: 32px;
+  font-weight: 500;
+  margin-left: 35px;
+  margin-right: 55px;
   margin-bottom: 30px;
   position: relative;
 `;

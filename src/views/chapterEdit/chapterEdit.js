@@ -37,7 +37,6 @@ import { IoPerson } from "react-icons/io5";
 import { MdModeEditOutline } from "react-icons/md";
 
 export function ChapterEdit() {
-  const { isOpen, onOpen, onClose } = useDisclosure(); //IntroductionModal
   const {
     isOpen: isOpenExpPoint,
     onOpen: onOpenExpPoint,
@@ -153,7 +152,15 @@ export function ChapterEdit() {
   const handleSelectSquare = (num) => {
     if (num !== selectedSquare) {
       setSelectedSquare(num);
-      if (expPointArr?.some((elm) => num in elm)) {
+
+      if (
+        chapterData.initialYPoint +
+          (chapterData.initialXPoint - 1) * colunasMap ===
+        num
+      ) {
+        setSelectedSquare(0);
+        return;
+      } else if (expPointArr?.some((elm) => num in elm)) {
         handleSelectExplorationPointToOpenUpdateModal(
           expPointArr[
             expPointArr.map((e) => parseInt(Object.keys(e)[0])).indexOf(num)
@@ -171,16 +178,9 @@ export function ChapterEdit() {
     <Background editchapter={true}>
       <Header />
 
-      {isOpen && (
-        <IntroductionModal
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          chapterData={chapterData}
-        />
-      )}
       {isOpenExpPoint && (
         <AddExplorationPointModal
+          chapterData={chapterData}
           x={
             selectedSquare % colunasMap !== 0
               ? selectedSquare % colunasMap
@@ -245,10 +245,9 @@ export function ChapterEdit() {
           h="100%"
           p={50}
         >
-          <Flex w="100%" mb={10}>
-            <Text fontSize="5xl">
-              {chapterData.name} - Edição de Pontos de Exploração
-            </Text>
+          <Flex w="100%" mb={10} flexDir="column">
+            <Text fontSize="5xl">{chapterData.name}</Text>
+            <Text fontSize="xl">Edição de Pontos de Exploração</Text>
           </Flex>
 
           <Flex direction="column" w="100%" justify="center">
@@ -286,47 +285,74 @@ export function ChapterEdit() {
                         key={num}
                         onClick={() => handleSelectSquare(num)}
                       >
-                        {expPointArr?.some((elm) => num in elm) && (
+                        {chapterData.initialYPoint +
+                          (chapterData.initialXPoint - 1) * colunasMap ===
+                        num ? (
                           <Flex
-                            h={(imageHeight / linhasMap) * 0.8}
-                            w={(imageWidth / colunasMap) * 0.8}
-                            bgColor={
-                              expPointArr[
-                                expPointArr
-                                  .map((e) => parseInt(Object.keys(e)[0]))
-                                  .indexOf(num)
-                              ][num][0].expPointEnemyOrPerson === "enemy"
-                                ? "#e33e32DD"
-                                : expPointArr[
-                                    expPointArr
-                                      .map((e) => parseInt(Object.keys(e)[0]))
-                                      .indexOf(num)
-                                  ][num][0].expPointEnemyOrPerson === "person"
-                                ? "#344ee0DD"
-                                : "#ebc438DD"
-                            }
-                            borderRadius={100}
+                            h={(imageHeight / linhasMap) * 0.65}
+                            w={(imageWidth / colunasMap) * 0.65}
                             display="flex"
                             align="center"
                             justify="center"
+                            bgColor="#e8741cDD"
+                            border="2px solid yellow"
+                            borderRadius={5}
+                            transform="rotate(45deg)"
                           >
-                            {/* <Text fontWeight={500}>
-                                                                {expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(num)][num].length}
-                                                            </Text> */}
-                            <Flex direction="column">
-                              {expPointArr[
-                                expPointArr
-                                  .map((e) => parseInt(Object.keys(e)[0]))
-                                  .indexOf(num)
-                              ][num].map((e, idx) => {
-                                return (
-                                  <Text fontWeight={500} key={idx}>
-                                    {e.code}
-                                  </Text>
-                                );
-                              })}
-                            </Flex>
+                            <Text
+                              transform="rotate(-45deg)"
+                              textAlign="center"
+                              fontSize="sm"
+                              lineHeight={1}
+                              fontWeight="700"
+                              my={2}
+                            >
+                              Ponto de Inicio
+                            </Text>
                           </Flex>
+                        ) : (
+                          expPointArr?.some((elm) => num in elm) && (
+                            <Flex
+                              h={(imageHeight / linhasMap) * 0.8}
+                              w={(imageWidth / colunasMap) * 0.8}
+                              bgColor={
+                                expPointArr[
+                                  expPointArr
+                                    .map((e) => parseInt(Object.keys(e)[0]))
+                                    .indexOf(num)
+                                ][num][0].expPointEnemyOrPerson === "enemy"
+                                  ? "#e33e32DD"
+                                  : expPointArr[
+                                      expPointArr
+                                        .map((e) => parseInt(Object.keys(e)[0]))
+                                        .indexOf(num)
+                                    ][num][0].expPointEnemyOrPerson === "person"
+                                  ? "#344ee0DD"
+                                  : "#ebc438DD"
+                              }
+                              borderRadius={100}
+                              display="flex"
+                              align="center"
+                              justify="center"
+                            >
+                              {/* <Text fontWeight={500}>
+                                  {expPointArr[expPointArr.map(e=>(parseInt(Object.keys(e)[0]))).indexOf(num)][num].length}
+                              </Text> */}
+                              <Flex direction="column">
+                                {expPointArr[
+                                  expPointArr
+                                    .map((e) => parseInt(Object.keys(e)[0]))
+                                    .indexOf(num)
+                                ][num].map((e, idx) => {
+                                  return (
+                                    <Text fontWeight={500} key={idx}>
+                                      {e.code}
+                                    </Text>
+                                  );
+                                })}
+                              </Flex>
+                            </Flex>
+                          )
                         )}
                       </Flex>
                     ))}

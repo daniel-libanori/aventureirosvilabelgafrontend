@@ -28,12 +28,14 @@ export const updateChapter = async (
   introduction,
   bookId,
   mapId,
-  final
+  final,
+  initialXPoint,
+  initialYPoint
 ) => {
   try {
     const response = await axios.put(
       `https://vila-belga-backend-9c5dfe0034fe.herokuapp.com/chapter/${chapterId}`,
-      { name, introduction, bookId, mapId, final }
+      { name, introduction, bookId, mapId, final, initialXPoint, initialYPoint }
     );
     return response;
   } catch (error) {
