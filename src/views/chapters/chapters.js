@@ -172,8 +172,8 @@ export function Chapters() {
           h="100%"
         >
           <Flex direction="column" align={"flex-start"} w={"100%"}>
-            <Text fontSize="8xl">{book?.name}</Text>
-            <Text fontSize="2xl" mb={10}>
+            <Text fontSize="5xl">{book?.name}</Text>
+            <Text fontSize="xl" mb={10}>
               Você já selecionou seu livro! Agora vamos criar ou editar os
               capítulos.
             </Text>
