@@ -289,8 +289,8 @@ export function ChapterEdit() {
                           (chapterData.initialXPoint - 1) * colunasMap ===
                         num ? (
                           <Flex
-                            h={(imageHeight / linhasMap) * 0.65}
-                            w={(imageWidth / colunasMap) * 0.65}
+                            h={"65%"}
+                            w={"65%"}
                             display="flex"
                             align="center"
                             justify="center"
@@ -313,8 +313,8 @@ export function ChapterEdit() {
                         ) : (
                           expPointArr?.some((elm) => num in elm) && (
                             <Flex
-                              h={(imageHeight / linhasMap) * 0.8}
-                              w={(imageWidth / colunasMap) * 0.8}
+                              h={"80%"}
+                              w={"80%"}
                               bgColor={
                                 expPointArr[
                                   expPointArr
