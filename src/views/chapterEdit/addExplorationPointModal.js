@@ -129,6 +129,8 @@ export function AddExplorationPointModal({
       .flat();
     setFormatedExpPointArr(newExpPointArr);
     if (type === "update") {
+      setEnemyArr(JSON.parse(selectedExplorationPoint.enemiesArray));
+
       setName(selectedExplorationPoint.name);
       setCode(selectedExplorationPoint.code);
       setIntroduction(selectedExplorationPoint.introduction);
@@ -531,7 +533,7 @@ export function AddExplorationPointModal({
                                 }}
                               >
                                 {enemyDataArr.map((enemy) => (
-                                  <option key={enemy.id} value={enemy.name}>
+                                  <option key={enemy.name} value={enemy.name}>
                                     {enemy.name}
                                   </option>
                                 ))}
