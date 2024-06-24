@@ -310,9 +310,7 @@ export function Chapter() {
 
                 <Icon as={MdModeEditOutline} mr={5} w={10} h={10} />
                 <Flex direction="column" justify="center">
-                  <Text fontSize="2xl">
-                    Ir para mapa de edição de pontos de exploração
-                  </Text>
+                  <Text fontSize="2xl">Ir para mapa de edição de seções</Text>
                 </Flex>
               </CreateUpdateIntroductionButton>
             </Flex>

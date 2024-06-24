@@ -7,6 +7,7 @@ import {
   AlertDialogOverlay,
   Button,
   Card,
+  Divider,
   Flex,
   Icon,
   Text,
@@ -227,7 +228,7 @@ export function ChapterEdit() {
         boxShadow="0px 5px 10px rgba(0, 0, 0, 0.5)"
         w={[, , , "90vw", "60vw"]}
         position={"absolute"}
-        top={[, , , 100, 100]}
+        top={[, , , 90, 90]}
       >
         <ArrowBackIcon
           pos={"absolute"}
@@ -245,9 +246,26 @@ export function ChapterEdit() {
           h="100%"
           p={50}
         >
-          <Flex w="100%" mb={10} flexDir="column">
+          <Flex w="100%" mb={5} flexDir="column">
             <Text fontSize="5xl">{chapterData.name}</Text>
-            <Text fontSize="xl">Edição de Pontos de Exploração</Text>
+            <Text fontSize="xl">Mapa Interativo de Edição de Seções</Text>
+            <Divider mt={2} />
+            <Text
+              mt={5}
+              fontWeight={300}
+              fontStyle="italic"
+              fontSize={14}
+              textAlign="justify"
+            >
+              Abaixo você pode ver o mapa, nele você poderá adicionar seções
+              (pontos de exploração, encontro com pessoas ou encontro com
+              inimigos) ou mudar a posição inicial dos jogadores (ao iniciar o
+              capítulo).{" "}
+              <Text as="span" fontWeight={500}>
+                Clique em qualquer espaço do mapa para iniciar
+              </Text>{" "}
+              ou em um ponto já existente para editá-lo ou excluí-lo.
+            </Text>
           </Flex>
 
           <Flex direction="column" w="100%" justify="center">

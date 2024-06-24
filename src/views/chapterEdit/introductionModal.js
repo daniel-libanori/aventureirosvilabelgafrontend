@@ -40,6 +40,12 @@ export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
         <ModalHeader>Editar Capítulo</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          <Text mb={5} fontStyle="italic" fontWeight={300}>
+            A introdução será o texto que irá aparecer logo ao iniciar o seu
+            capítulo, nela você pode escrever falando sobre o inicio do capítulo
+            e sobre o que aconteceu quando os personagens chegaram no local do
+            mapa desse capítulo, por exemplo.
+          </Text>
           <Text mb={5}>Adicione o texto de introdução do seu capítulo.</Text>
           <Textarea
             placeholder="Insira aqui a introdução do seu capítulo..."

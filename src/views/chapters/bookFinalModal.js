@@ -32,13 +32,14 @@ export function BookFinalModal({ isOpen, onOpen, onClose, book }) {
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Editar Fim do Capítulo</ModalHeader>
+        <ModalHeader>Editar Epílogo do Livro</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={5}>
-            Agora adicione o texto que aparecerá após a conclusão do seu
-            capítulo.
+          <Text mb={5} fontStyle="italic" fontWeight={300}>
+            Epílogo será o texto que irá aparecer após o término de todo o seu
+            livro, nele você poderá escrever o desfecho da sua história.
           </Text>
+          <Text mb={5}>Agora adicione o epílogo do seu livro.</Text>
           <Textarea
             placeholder="Insira aqui o final do seu capítulo..."
             value={final}

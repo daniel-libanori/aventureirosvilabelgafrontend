@@ -37,10 +37,15 @@ export function BookIntroductionModal({ isOpen, onOpen, onClose, book }) {
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Editar Prólogo</ModalHeader>
+        <ModalHeader>Editar Prólogo do Livro</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text mb={5}>Adicione o texto de introdução do seu capítulo.</Text>
+          <Text mb={5} fontStyle="italic" fontWeight={300}>
+            Prólogo será o texto que irá aparecer antes do início de seu livro,
+            nele você poderá escrever o início da sua história, contextualizando
+            e passando informações iniciais sobre a história.
+          </Text>
+          <Text mb={5}>Adicione o texto de prólogo do seu livro.</Text>
           <Textarea
             placeholder="Insira aqui a introdução do seu capítulo..."
             value={introduction}
