@@ -16,6 +16,8 @@ import {
   AlertDialogOverlay,
   AlertDialogContent,
   AlertDialogHeader,
+  Box,
+  Divider,
 } from "@chakra-ui/react";
 import {
   Flex,
@@ -84,7 +86,36 @@ export function AddExplorationPointModal({
 
   // Fight
 
-  const [enemyDataArr, setEnemyDataArr] = useState([]);
+  const [enemyDataArr, setEnemyDataArr] = useState([
+    {
+      id: 1,
+      name: "I01",
+      lifePoints: 1,
+      attackPoints: 1,
+      created_at: "2024-05-08T05:44:53.430Z",
+    },
+    {
+      id: 2,
+      name: "I02",
+      lifePoints: 1,
+      attackPoints: 1,
+      created_at: "2024-05-08T05:44:57.259Z",
+    },
+    {
+      id: 3,
+      name: "I03",
+      lifePoints: 1,
+      attackPoints: 1,
+      created_at: "2024-05-08T05:45:01.359Z",
+    },
+    {
+      id: 4,
+      name: "I04",
+      lifePoints: 1,
+      attackPoints: 1,
+      created_at: "2024-05-08T05:45:25.099Z",
+    },
+  ]);
   const [enemyArr, setEnemyArr] = useState([]);
   const [numberInputValue, setNumberInputValue] = useState(1);
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
@@ -116,12 +147,16 @@ export function AddExplorationPointModal({
 
   const input = getInputProps();
 
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const [enemiesNumber, setEnemiesNumber] = useState(1);
+
   useLayoutEffect(() => {
     const getEnemiesData = async () => {
       const enemies = await getAllEnemies();
       setEnemyDataArr(enemies?.data);
     };
-    getEnemiesData();
+    //getEnemiesData();
   }, []);
 
   useLayoutEffect(() => {
@@ -278,7 +313,7 @@ export function AddExplorationPointModal({
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Deletar Ponto de Exploração
+                Deletar Seção
               </AlertDialogHeader>
 
               <AlertDialogBody>
@@ -323,7 +358,7 @@ export function AddExplorationPointModal({
                     right={3}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setHelpDataKey("chapterEdit");
+                      setHelpDataKey("addExplorationPoint");
                       onOpenHelp();
                     }}
                   />
@@ -350,14 +385,14 @@ export function AddExplorationPointModal({
                     right={3}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setHelpDataKey("chapterEdit");
+                      setHelpDataKey("addPersonDialog");
                       onOpenHelp();
                     }}
                   />
 
                   <Icon as={IoPerson} w={20} h={20} />
                   <Text fontSize="2xl" align="center">
-                    Adicionar Pessoa
+                    Adicionar Encontro com Pessoa
                   </Text>
                 </CreateUpdatePointButton>
                 <CreateUpdatePointButton
@@ -378,14 +413,14 @@ export function AddExplorationPointModal({
                     right={3}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setHelpDataKey("chapterEdit");
+                      setHelpDataKey("addEnemy");
                       onOpenHelp();
                     }}
                   />
 
                   <Icon as={ImEvil} w={20} h={20} />
                   <Text fontSize="2xl" align="center">
-                    Adicionar Inimigo
+                    Adicionar Encontro com Inimigo
                   </Text>
                 </CreateUpdatePointButton>
               </Flex>
@@ -405,14 +440,14 @@ export function AddExplorationPointModal({
                     right={3}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setHelpDataKey("chapterEdit");
+                      setHelpDataKey("setNewInitialPosition");
                       onOpenHelp();
                     }}
                   />
 
                   <Icon as={FaFlag} w={20} h={20} />
                   <Text fontSize="2xl" align="center">
-                    Fazer desse o Ponto Inicial do Capítulo
+                    Fazer desse a Posição Inicial do Capítulo
                   </Text>
                 </StartPointButton>
               </Flex>
@@ -423,7 +458,7 @@ export function AddExplorationPointModal({
         {step === 2 && (
           <ModalContent>
             <ModalHeader>
-              Criação de Novo{" "}
+              {type === "update" ? "Edição de" : "Criação de Novo"}{" "}
               {expPointEnemyOrPerson === "expPoint"
                 ? "Ponto de Exploração"
                 : expPointEnemyOrPerson === "person"
@@ -432,63 +467,188 @@ export function AddExplorationPointModal({
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Flex direction="column">
-                <Text>Digite o código do seu ponto (obrigatório)</Text>
-                <Input
-                  onChange={(e) => setCode(e.target.value)}
-                  value={code}
-                  placeholder="Código do seu ponto..."
-                />
+              {/* Tabs */}
+              <Flex w="full">
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flex={1}
+                  p={2}
+                  borderBottom={`2px solid ${
+                    selectedTab === 0 ? "DodgerBlue" : "gray"
+                  }`}
+                  borderRadius="md"
+                  mr={2}
+                  onClick={() => setSelectedTab(0)}
+                  _hover={{ borderBottomColor: "DodgerBlue" }}
+                >
+                  <Text>Informações Básicas</Text>
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flex={1}
+                  p={2}
+                  borderBottom={`2px solid ${
+                    selectedTab === 1 ? "DodgerBlue" : "gray"
+                  }`}
+                  borderRadius="md"
+                  mr={2}
+                  onClick={() => setSelectedTab(1)}
+                  _hover={{ borderBottomColor: "DodgerBlue" }}
+                >
+                  <Text>
+                    {explorationPointType === "fight"
+                      ? "Informações dos Inimigos"
+                      : "Tipo do Seção"}
+                  </Text>
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flex={1}
+                  p={2}
+                  borderBottom={`2px solid ${
+                    selectedTab === 2 ? "DodgerBlue" : "gray"
+                  }`}
+                  borderRadius="md"
+                  mr={2}
+                  onClick={() => setSelectedTab(2)}
+                  _hover={{ borderBottomColor: "DodgerBlue" }}
+                >
+                  <Text>Seção Pré-requisito</Text>
+                </Box>
+              </Flex>
 
-                <Text mt={5}>Digite o nome do seu ponto</Text>
-                <Input
-                  onChange={(e) => setName(e.target.value)}
-                  value={name}
-                  placeholder="Nome do seu ponto de exploração..."
-                />
-
-                <Flex direction="row" mt={10}>
-                  <Flex direction="column">
-                    <Text mb={5}>
-                      Agora adicione o texto ao seu ponto de exploração.
-                    </Text>
-                    <Textarea
-                      placeholder="Insira aqui a introdução do ponto de exploração..."
-                      value={introduction}
-                      onChange={(e) => setIntroduction(e.target.value)}
-                      height={200}
-                      w={400}
-                    />
-                    {expPointEnemyOrPerson !== "enemy" && (
-                      <>
-                        <Text mt={5} mb={2}>
-                          Selecione o tipo do seu ponto de exploração.
-                        </Text>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
+              {selectedTab === 0 && (
+                <Flex direction="column">
+                  <Flex mt={5} alignItems="end">
+                    <Flex direction="column" flex={1}>
+                      <Text mb={1}>
+                        Digite o{" "}
+                        <Text as="span" fontWeight={600}>
+                          código
+                        </Text>{" "}
+                        da sua seção{" "}
+                        <Text
+                          as="span"
+                          fontWeight={300}
+                          fontStyle="italic"
+                          fontSize={14}
                         >
-                          <Select
-                            placeholder="Escolha o Tipo do Ponto de Exploração"
-                            value={explorationPointType}
-                            onChange={(e) =>
-                              setExplorationPointType(e.target.value)
-                            }
-                          >
-                            <option value={"text"}>Texto Apenas</option>
-                            {/* <option value={'fight'}>Inimigos aparecem</option> */}
-                            <option value={"individual-challange"}>
-                              Desafio de Rolagem individual
-                            </option>
-                            <option value={"group-challange"}>
-                              Desafio de Rolagem em Grupo
-                            </option>
-                          </Select>
+                          (obrigatório)
+                        </Text>{" "}
+                      </Text>
+                      <Input
+                        onChange={(e) => setCode(e.target.value)}
+                        value={code}
+                        placeholder="Código da sua seção..."
+                        mr={10}
+                      />
+                    </Flex>
+                    <Text
+                      fontStyle="italic"
+                      ml={5}
+                      flex={1}
+                      fontWeight={300}
+                      fontSize={14}
+                    >
+                      O código é utilizado para identificar a seção no
+                      tabuleiro, de acordo com as fichas colocadas no mapa.
+                    </Text>
+                  </Flex>
 
-                          <QuestionOutlineIcon
+                  <Divider mt={7} />
+
+                  <Flex mt={7} alignItems="start">
+                    <Flex direction="column" flex={1}>
+                      <Text mb={1}>
+                        Digite o{" "}
+                        <Text as="span" fontWeight={600}>
+                          nome
+                        </Text>{" "}
+                        da sua seção
+                      </Text>
+                      <Input
+                        onChange={(e) => setName(e.target.value)}
+                        value={name}
+                        placeholder="Nome da sua seção..."
+                        mr={10}
+                      />
+                    </Flex>
+                    <Text
+                      fontStyle="italic"
+                      ml={5}
+                      flex={1}
+                      fontWeight={300}
+                      fontSize={14}
+                      mt={7}
+                    >
+                      O nome é utilizado para identificar a seção no livro, de
+                      acordo com a história que será contada. Pode ser o nome de
+                      um acontecimento num ponto de exploração, objeto, pessoa
+                      encontrada ou inimigo encontrado, por exemplo.
+                    </Text>
+                  </Flex>
+
+                  <Divider mt={7} />
+
+                  <Flex mt={7} alignItems="start">
+                    <Flex direction="column" flex={1}>
+                      <Text mb={1}>Agora adicione o texto à sua seção.</Text>
+                      <Textarea
+                        placeholder="Insira aqui o texto relativo à seção..."
+                        value={introduction}
+                        onChange={(e) => setIntroduction(e.target.value)}
+                        height={200}
+                      />
+                    </Flex>
+                    <Text
+                      mt={7}
+                      fontStyle="italic"
+                      ml={5}
+                      flex={1}
+                      fontWeight={300}
+                      fontSize={14}
+                    >
+                      O texto da sua seção será exibido no livro para os
+                      jogadores. Pode conter informações sobre o local que o
+                      jogador acabou de chegar, diálogos, eventos e etc.
+                    </Text>
+                  </Flex>
+                </Flex>
+              )}
+
+              {selectedTab === 1 && (
+                <Flex direction="column">
+                  {expPointEnemyOrPerson !== "enemy" && (
+                    <>
+                      <Flex alignItems="start" mt={5} gap={5}>
+                        <Flex direction="column" flex={1}>
+                          <Text mb={2}>Selecione o tipo da sua seção.</Text>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                          >
+                            <Select
+                              value={explorationPointType}
+                              onChange={(e) =>
+                                setExplorationPointType(e.target.value)
+                              }
+                            >
+                              <option value={"text"}>Texto Apenas</option>
+                              <option value={"individual-challange"}>
+                                Desafio de Rolagem individual
+                              </option>
+                              <option value={"group-challange"}>
+                                Desafio de Rolagem em Grupo
+                              </option>
+                            </Select>
+
+                            {/* <QuestionOutlineIcon
                             cursor="pointer"
                             z={10}
                             color="black"
@@ -500,169 +660,315 @@ export function AddExplorationPointModal({
                               setHelpDataKey("expPointTypes");
                               onOpenHelp();
                             }}
+                          /> */}
+                          </div>
+                        </Flex>
+                        <Text
+                          flex={1}
+                          pt={2}
+                          fontWeight={300}
+                          fontSize={14}
+                          fontStyle="italic"
+                        >
+                          <Text as="span" fontWeight={500}>
+                            Apenas Texto
+                          </Text>{" "}
+                          - Seção que contém apenas o texto das aba de
+                          informações básicas. <br />
+                          <Text as="span" fontWeight={500}>
+                            Desafio de Rolagem Individual
+                          </Text>{" "}
+                          - Desafio de rolagem de dados de apenas um jogador.{" "}
+                          <br />
+                          <Text as="span" fontWeight={500}>
+                            Desafio de Rolagem em Grupo
+                          </Text>{" "}
+                          - Desafio de rolagem de dados de vários jogadores, que
+                          pode ser realizado ao longo de várias rodadas para
+                          andar com o marcador do trem.
+                        </Text>
+                      </Flex>
+                      <Divider mt={7} />
+                    </>
+                  )}
+
+                  {enemyDataArr.length > 0 &&
+                    explorationPointType === "fight" && (
+                      <Flex mt={5}>
+                        <Flex px={8} w="full" justify="center">
+                          <Carousel
+                            showIndicators={false}
+                            showStatus={false}
+                            showArrows={false}
+                          >
+                            {enemyDataArr.map((e) => (
+                              <div key={e.id}>
+                                <img
+                                  src={returnEnemyImage(e.name)}
+                                  alt={e.name}
+                                  style={{
+                                    width: "150px",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                                <p className="legend">{e.name}</p>
+                              </div>
+                            ))}
+                          </Carousel>
+                        </Flex>
+                      </Flex>
+                    )}
+                  {explorationPointType === "fight" &&
+                    enemyDataArr.length > 0 && (
+                      <>
+                        <Text mt={5} mb={2}>
+                          Selecione a quantidade de inimigos que irão aparecer.
+                        </Text>
+                        <HStack>
+                          <Button
+                            // {...dec}
+                            disabled={enemiesNumber === 1}
+                            onClick={() => {
+                              if (enemiesNumber === 1) return;
+                              setEnemiesNumber(enemiesNumber - 1);
+                              setEnemyArr(enemyArr.slice(0, -1));
+                            }}
+                          >
+                            -
+                          </Button>
+                          <Input
+                            value={enemiesNumber}
+                            //{...input}
+                            textAlign="center"
                           />
-                        </div>
-                      </>
-                    )}
-                    {explorationPointType === "fight" &&
-                      enemyDataArr.length > 0 && (
-                        <>
-                          <Text mt={5} mb={2}>
-                            Selecione a quantidade de inimigos que irão
-                            aparecer.
-                          </Text>
-                          <HStack>
-                            <Button
-                              {...dec}
-                              onClick={() => setEnemyArr(enemyArr.slice(0, -1))}
+                          <Button
+                            // {...inc}
+                            onClick={() => {
+                              setEnemiesNumber(enemiesNumber + 1);
+                            }}
+                          >
+                            +
+                          </Button>
+                        </HStack>
+                        <Text mt={5} mb={2}>
+                          Agora selecione quais inimigos irão aparecer.
+                        </Text>
+                        {contarAteNumero(parseInt(enemiesNumber)).map(
+                          (item, index) => (
+                            <Select
+                              mb={2}
+                              key={index}
+                              placeholder="Escolha o inimigo que aparecerá"
+                              value={enemyArr[index]}
+                              onChange={(e) => {
+                                const newArr = [...enemyArr];
+                                newArr[index] = e.target.value;
+                                setEnemyArr(newArr);
+                              }}
                             >
-                              -
-                            </Button>
-                            <Input {...input} textAlign="center" />
-                            <Button {...inc}>+</Button>
-                          </HStack>
+                              {enemyDataArr.map((enemy) => (
+                                <option key={enemy.name} value={enemy.name}>
+                                  {enemy.name}
+                                </option>
+                              ))}
+                            </Select>
+                          )
+                        )}
+                      </>
+                    )}
+                  {(explorationPointType === "individual-challange" ||
+                    explorationPointType === "group-challange") && (
+                    <>
+                      <Flex mt={7} alignItems="start" gap={5}>
+                        <Flex direction="column" gap={2} flex={1} mt={5}>
+                          <Flex direction="row" align="center">
+                            <NumberInput
+                              defaultValue={1}
+                              min={1}
+                              step={1}
+                              value={diceAmount}
+                              onChange={(e) => setDiceAmount(e)}
+                              w={50}
+                              mr={3}
+                            >
+                              <NumberInputField
+                                textAlign="center"
+                                pl={0}
+                                pr={0}
+                              />
+                            </NumberInput>
+                            <Text>Quantidade de Dados</Text>
+                          </Flex>
+                          <Flex direction="row" align="center">
+                            <NumberInput
+                              defaultValue={1}
+                              min={1}
+                              step={1}
+                              max={6}
+                              value={diceMinimumValue}
+                              onChange={(e) => setDiceMinimumValue(e)}
+                              w={50}
+                              mr={3}
+                            >
+                              <NumberInputField
+                                textAlign="center"
+                                pl={0}
+                                pr={0}
+                              />
+                            </NumberInput>
+                            <Text>Valor Mínimo para o Sucesso</Text>
+                          </Flex>
+                          <Flex direction="row" align="center">
+                            <NumberInput
+                              defaultValue={1}
+                              min={1}
+                              step={1}
+                              max={diceAmount}
+                              value={diceSuccessAmout}
+                              onChange={(e) => setDiceSuccessAmout(e)}
+                              w={50}
+                              mr={3}
+                            >
+                              <NumberInputField
+                                textAlign="center"
+                                pl={0}
+                                pr={0}
+                              />
+                            </NumberInput>
+                            <Text>
+                              Quantidade de Dados com Valor Mínimo para Suceso
+                            </Text>
+                          </Flex>
+                        </Flex>
+                        <Flex flex={1} direction="column">
+                          <Text
+                            fontWeight={300}
+                            fontSize={14}
+                            fontStyle="italic"
+                          >
+                            Selecione as variaveis para o desafio de rolagem de
+                            acordo com o tipo da seção: <br /> <br />
+                            <Text as="span" fontWeight={500}>
+                              Desafio de Rolagem Individual
+                            </Text>{" "}
+                            - Certifique-se que a{" "}
+                            <Text as="span" fontWeight={500}>
+                              quantidade de dados
+                            </Text>{" "}
+                            seja maior que a quantidade de{" "}
+                            <Text as="span" fontWeight={500}>
+                              quantidade de dados com valor mínimo para o
+                              sucesso
+                            </Text>{" "}
+                            , pois se não o desafio será impossível de ser
+                            vencido.
+                            <br />
+                            <br />
+                            <Text as="span" fontWeight={500}>
+                              Desafio de Rolagem em Grupo
+                            </Text>{" "}
+                            - Sugere-se que a{" "}
+                            <Text as="span" fontWeight={500}>
+                              quantidade de dados
+                            </Text>{" "}
+                            seja menor que a quantidade de{" "}
+                            <Text as="span" fontWeight={500}>
+                              quantidade de dados com valor mínimo para o
+                              sucesso
+                            </Text>{" "}
+                            , pois o desafio em grupo pode ser resolvido em mais
+                            de uma rodada.
+                          </Text>
+                        </Flex>
+                      </Flex>
+
+                      <Divider mt={7} />
+                    </>
+                  )}
+                  {(explorationPointType === "individual-challange" ||
+                    explorationPointType === "group-challange" ||
+                    explorationPointType === "fight") && (
+                    <>
+                      <Flex gap={5}>
+                        <Flex direction="column" flex={1}>
                           <Text mt={5} mb={2}>
-                            Agora selecione quais inimigos irão aparecer.
+                            Agora adicione o texto de sucesso do sua seção.
                           </Text>
-                          {contarAteNumero(parseInt(input.value)).map(
-                            (item, index) => (
-                              <Select
-                                key={index}
-                                placeholder="Escolha o inimigo que aparecerá"
-                                value={enemyArr[index]}
-                                onChange={(e) => {
-                                  const newArr = [...enemyArr];
-                                  newArr[index] = e.target.value;
-                                  setEnemyArr(newArr);
-                                }}
-                              >
-                                {enemyDataArr.map((enemy) => (
-                                  <option key={enemy.name} value={enemy.name}>
-                                    {enemy.name}
-                                  </option>
-                                ))}
-                              </Select>
-                            )
-                          )}
-                        </>
-                      )}
-                    {(explorationPointType === "individual-challange" ||
-                      explorationPointType === "group-challange") && (
-                      <>
-                        <Flex direction="row" align="center">
-                          <NumberInput
-                            defaultValue={1}
-                            min={1}
-                            step={1}
-                            value={diceAmount}
-                            onChange={(e) => setDiceAmount(e)}
-                            w={50}
-                            mr={3}
-                          >
-                            <NumberInputField
-                              textAlign="center"
-                              pl={0}
-                              pr={0}
-                            />
-                          </NumberInput>
-                          <Text>Quantidade de Dados</Text>
-                        </Flex>
-                        <Flex direction="row" align="center">
-                          <NumberInput
-                            defaultValue={1}
-                            min={1}
-                            step={1}
-                            max={6}
-                            value={diceMinimumValue}
-                            onChange={(e) => setDiceMinimumValue(e)}
-                            w={50}
-                            mr={3}
-                          >
-                            <NumberInputField
-                              textAlign="center"
-                              pl={0}
-                              pr={0}
-                            />
-                          </NumberInput>
-                          <Text>Valor Mínimo para o Sucesso</Text>
-                        </Flex>
-                        <Flex direction="row" align="center">
-                          <NumberInput
-                            defaultValue={1}
-                            min={1}
-                            step={1}
-                            max={diceAmount}
-                            value={diceSuccessAmout}
-                            onChange={(e) => setDiceSuccessAmout(e)}
-                            w={50}
-                            mr={3}
-                          >
-                            <NumberInputField
-                              textAlign="center"
-                              pl={0}
-                              pr={0}
-                            />
-                          </NumberInput>
-                          <Text>
-                            Quantidade de Dados com Valor Mínimo para Suceso
+                          <Textarea
+                            placeholder="Insira aqui o texto de sucesso"
+                            value={successText}
+                            onChange={(e) => setSuccessText(e.target.value)}
+                            height={200}
+                          />
+                          <Text mt={1} fontSize={11}>
+                            *Caso não exista texto de sucesso, ele será pulado
+                            ao criar o pdf do livro.
                           </Text>
                         </Flex>
-                      </>
-                    )}
-                    {(explorationPointType === "individual-challange" ||
-                      explorationPointType === "group-challange" ||
-                      explorationPointType === "fight") && (
-                      <>
-                        <Text mt={5} mb={2}>
-                          Agora adicione o texto de sucesso do seu ponto de
-                          exploração.
+                        <Text
+                          fontStyle="italic"
+                          flex={1}
+                          fontWeight={300}
+                          fontSize={14}
+                          mt={12}
+                        >
+                          O texto de sucesso é exibido ao jogador quando ele
+                          completar o desafio de rolagem de dados ou vencer
+                          inimigos. Nele você pode colocar dialogos da história,
+                          recompensas e etc.
                         </Text>
-                        <Textarea
-                          placeholder="Insira aqui o texto de sucesso"
-                          value={successText}
-                          onChange={(e) => setSuccessText(e.target.value)}
-                          height={200}
-                          w={400}
-                        />
-                        <Text mt={1} fontSize={11}>
-                          *Caso não exista texto de sucesso, ele será pulado ao
-                          criar o pdf do livro.
-                        </Text>
-                      </>
-                    )}
-                    {explorationPointType === "individual-challange" && (
-                      <>
+                      </Flex>
+                      <Divider mt={7} />
+                    </>
+                  )}
+                  {explorationPointType === "individual-challange" && (
+                    <Flex gap={5}>
+                      <Flex direction="column" flex={1}>
                         <Text mt={5} mb={2}>
-                          Agora adicione o texto de fracasso do seu ponto de
-                          exploração.
+                          Agora adicione o texto de fracasso do sua seção.
                         </Text>
                         <Textarea
                           placeholder="Insira aqui o texto de fracasso"
                           value={failText}
                           onChange={(e) => setFailText(e.target.value)}
                           height={200}
-                          w={400}
                         />
                         <Text mt={1} fontSize={11}>
                           *Caso não exista texto de fracasso, ele será pulado ao
                           criar o pdf do livro.
                         </Text>
-                      </>
-                    )}
-                  </Flex>
+                      </Flex>
+                      <Text
+                        fontStyle="italic"
+                        flex={1}
+                        fontWeight={300}
+                        fontSize={14}
+                        mt={12}
+                      >
+                        O texto de fracasso é exibido ao jogador caso ele perca
+                        o desafio de rolagem de dados individual (caso o jogador
+                        perca para inimigos ele irá apenas desmaiar e para
+                        desafios de rolagem em grupo, não há como o jogador
+                        fracassar). Nele você pode colocar dialogos da história,
+                        recompensas (ou penalidades) e etc.
+                      </Text>
+                    </Flex>
+                  )}
+                </Flex>
+              )}
 
-                  <Flex direction="column">
-                    <Text ml={5} mb={5}>
-                      Selecione o ponto que será pré-requisito para esse ponto
-                      de exploração:
+              {selectedTab === 2 && (
+                <Flex mt={5}>
+                  <Flex direction="column" flex={1}>
+                    <Text mb={2}>
+                      Selecione a seção que será pré-requisito para esse liberar
+                      essa seção:
                     </Text>
                     <Flex
                       overflow="auto"
                       direction="column"
                       border="1px solid black"
-                      w={550}
                       h={300}
-                      ml={5}
                     >
                       {formatedExpPointArr.map((expPoint, index) => {
                         if (expPoint.id === selectedExplorationPoint.id)
@@ -716,45 +1022,36 @@ export function AddExplorationPointModal({
                         );
                       })}
                     </Flex>
-                    <Text ml={5} mr={1} mb={5}>
+                    <Text mr={1} mb={5}>
                       *Caso não exista nenhum pré-requisito, ele será liberado
                       ao inicio do jogo.
                     </Text>
-
-                    {enemyDataArr.length > 0 &&
-                      explorationPointType === "fight" && (
-                        <Flex px={8}>
-                          <Carousel>
-                            {enemyDataArr.map((e) => (
-                              <div key={e.id}>
-                                <img
-                                  src={returnEnemyImage(e.name)}
-                                  alt={e.name}
-                                  style={{
-                                    width: "40%",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                                <p className="legend">{e.name}</p>
-                              </div>
-                            ))}
-                          </Carousel>
-                        </Flex>
-                      )}
                   </Flex>
+                  <Text
+                    fontStyle="italic"
+                    ml={5}
+                    mt={50}
+                    flex={1}
+                    fontWeight={300}
+                    fontSize={14}
+                  >
+                    Ao lado há uma lista de todos as seções que já foram criadas
+                    no seu capítulo. Você pode selecionar uma seção para que
+                    quando ele for completa, a seção que você está criando seja
+                    liberada. <br /> <br />
+                    Por exemplo: Caso eu selecione uma seção chamada "A" como
+                    pré-requisito para a seção que estou criando, a seção que
+                    estou criando só será liberada quando a seção "A" for
+                    completa.
+                  </Text>
                 </Flex>
-              </Flex>
+              )}
             </ModalBody>
 
             <ModalFooter mt={10} display="flex" justifyContent="flex-end">
               {type === "update" && (
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={onOpenDelete}
-                  isDisabled={code.length === 0}
-                >
-                  Deletar Ponto de Exploracao
+                <Button colorScheme="blue" mr={3} onClick={onOpenDelete}>
+                  Deletar Seção
                 </Button>
               )}
               <Button
@@ -763,9 +1060,7 @@ export function AddExplorationPointModal({
                 onClick={onCreatePress}
                 isDisabled={code.length === 0}
               >
-                {type === "add"
-                  ? "Adicionar Ponto de Exploracao"
-                  : "Atualizar Ponto de Exploracao"}
+                {type === "add" ? "Adicionar Seção" : "Atualizar Seção"}
               </Button>
             </ModalFooter>
           </ModalContent>
