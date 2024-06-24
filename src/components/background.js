@@ -17,7 +17,7 @@ const StyledFlex = styled(Flex)`
   width: 100vw;
   height: ${(props) =>
     !!props.editchapter
-      ? window.innerHeight * 2 + "px"
+      ? window.innerHeight * 2.2 + "px"
       : props.mediumSize
       ? "140vh"
       : "100vh"};
