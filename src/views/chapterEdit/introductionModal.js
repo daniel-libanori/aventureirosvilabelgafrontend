@@ -21,6 +21,7 @@ export function IntroductionModal({ isOpen, onOpen, onClose, chapterData }) {
   const onCreatePress = async () => {
     const res = await updateChapter(
       chapterId,
+      chapterData.name,
       introduction,
       bookId,
       chapterData.mapId
