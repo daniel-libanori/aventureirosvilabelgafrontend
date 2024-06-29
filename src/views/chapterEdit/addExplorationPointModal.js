@@ -172,7 +172,7 @@ export function AddExplorationPointModal({
 
       setName(selectedExplorationPoint.name);
       setCode(selectedExplorationPoint.code);
-      setIntroduction(selectedExplorationPoint.introduction);
+      setIntroduction(selectedExplorationPoint.pointIntroductionText);
       setText(selectedExplorationPoint.text);
       setPreRequisiteExpPoints(selectedExplorationPoint.previousRelation);
       setExpPointEnemyOrPerson(selectedExplorationPoint.expPointEnemyOrPerson);
