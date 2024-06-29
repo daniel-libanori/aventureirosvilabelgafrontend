@@ -500,7 +500,7 @@ export function AddExplorationPointModal({
                   <Text>
                     {explorationPointType === "fight"
                       ? "Informações dos Inimigos"
-                      : "Tipo do Seção"}
+                      : "Tipo da Seção"}
                   </Text>
                 </Box>
                 <Box
@@ -522,7 +522,7 @@ export function AddExplorationPointModal({
 
               {selectedTab === 0 && (
                 <Flex direction="column">
-                  <Flex mt={5} alignItems="end">
+                  <Flex mt={5} alignItems="start">
                     <Flex direction="column" flex={1}>
                       <Text mb={1}>
                         Digite o{" "}
@@ -547,14 +547,35 @@ export function AddExplorationPointModal({
                       />
                     </Flex>
                     <Text
+                      mt={3}
                       fontStyle="italic"
                       ml={5}
                       flex={1}
                       fontWeight={300}
                       fontSize={14}
                     >
-                      O código é utilizado para identificar a seção no
-                      tabuleiro, de acordo com as fichas colocadas no mapa.
+                      O{" "}
+                      <Text
+                        as="span"
+                        fontWeight={500}
+                        fontStyle="italic"
+                        fontSize={14}
+                      >
+                        código
+                      </Text>{" "}
+                      é utilizado para representar qual seção (
+                      <Text
+                        as="span"
+                        fontWeight={500}
+                        fontStyle="italic"
+                        fontSize={14}
+                      >
+                        ficha
+                      </Text>
+                      ) será inserido nessa posição no mapa e para identificar a
+                      seção que será lida ao chegar nesse ponto no mapa.
+                      Preencher com a identificação da ficha . Por exemplo: E01,
+                      E02, E03, etc.
                     </Text>
                   </Flex>
 
@@ -582,7 +603,7 @@ export function AddExplorationPointModal({
                       flex={1}
                       fontWeight={300}
                       fontSize={14}
-                      mt={7}
+                      mt={3}
                     >
                       O nome é utilizado para identificar a seção no livro, de
                       acordo com a história que será contada. Pode ser o nome de
