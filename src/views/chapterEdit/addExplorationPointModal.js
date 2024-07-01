@@ -137,6 +137,7 @@ export function AddExplorationPointModal({
   const [diceAmount, setDiceAmount] = useState(1);
   const [diceMinimumValue, setDiceMinimumValue] = useState(1);
   const [diceSuccessAmout, setDiceSuccessAmout] = useState(1);
+  const [customChallangeText, setCustomChallangeText] = useState("");
 
   //challanges and fight
   const [successText, setSuccessText] = useState("");
@@ -187,6 +188,7 @@ export function AddExplorationPointModal({
       );
       setSuccessText(selectedExplorationPoint.successText);
       setFailText(selectedExplorationPoint.failText);
+      setCustomChallangeText(selectedExplorationPoint.pointChallangeText);
     }
   }, []);
 
@@ -199,7 +201,7 @@ export function AddExplorationPointModal({
         x,
         y,
         introduction,
-        text,
+        customChallangeText,
         preRequisiteExpPoints.map((e) => e.id),
         [],
         explorationPointType,
@@ -219,7 +221,7 @@ export function AddExplorationPointModal({
         x,
         y,
         introduction,
-        text,
+        customChallangeText,
         preRequisiteExpPoints.map((e) => e.id),
         [],
         explorationPointType,
@@ -667,6 +669,9 @@ export function AddExplorationPointModal({
                               <option value={"group-challange"}>
                                 Desafio de Rolagem em Grupo
                               </option>
+                              <option value={"custom-individual-challange"}>
+                                Desafio individual Customizado
+                              </option>
                             </Select>
 
                             {/* <QuestionOutlineIcon
@@ -707,6 +712,12 @@ export function AddExplorationPointModal({
                           - Desafio de rolagem de dados de vários jogadores, que
                           pode ser realizado ao longo de várias rodadas para
                           andar com o marcador do trem.
+                          <br />
+                          <Text as="span" fontWeight={500}>
+                            Desafio Individual Customizado
+                          </Text>{" "}
+                          - Desafio individual que não segue a mecanica padrão
+                          de rolagem de dados.
                         </Text>
                       </Flex>
                       <Divider mt={7} />
@@ -797,6 +808,42 @@ export function AddExplorationPointModal({
                         )}
                       </>
                     )}
+
+                  {explorationPointType === "custom-individual-challange" && (
+                    <Flex mt={7} alignItems="start">
+                      <Flex direction="column" flex={1}>
+                        <Text mb={1}>
+                          Agora adicione o texto de desafio customizado:
+                        </Text>
+                        <Textarea
+                          placeholder="Insira aqui o texto de desafio customizado..."
+                          value={customChallangeText}
+                          onChange={(e) =>
+                            setCustomChallangeText(e.target.value)
+                          }
+                          height={200}
+                        />
+                      </Flex>
+                      <Text
+                        mt={7}
+                        fontStyle="italic"
+                        ml={5}
+                        flex={1}
+                        fontWeight={300}
+                        fontSize={14}
+                      >
+                        Aqui você pode escrever algum desafio customizado,
+                        criando suas próprias regras para o desafio, não
+                        precisando ficar restrito à mecanica padrão de rolagem
+                        de dados. Alguns exemplos: <br /> <br />- Role 3 dados e
+                        some os resultados para obter um valor maior que 7.
+                        <br /> - Role 6 dados até encontrar a sequencia de
+                        números 3456. <br /> - Role 5 dados até obter ao menos 3
+                        números iguais.
+                      </Text>
+                    </Flex>
+                  )}
+
                   {(explorationPointType === "individual-challange" ||
                     explorationPointType === "group-challange") && (
                     <>
@@ -908,6 +955,7 @@ export function AddExplorationPointModal({
                   )}
                   {(explorationPointType === "individual-challange" ||
                     explorationPointType === "group-challange" ||
+                    explorationPointType === "custom-individual-challange" ||
                     explorationPointType === "fight") && (
                     <>
                       <Flex gap={5}>
@@ -942,7 +990,8 @@ export function AddExplorationPointModal({
                       <Divider mt={7} />
                     </>
                   )}
-                  {explorationPointType === "individual-challange" && (
+                  {(explorationPointType === "individual-challange" ||
+                    explorationPointType === "custom-individual-challange") && (
                     <Flex gap={5}>
                       <Flex direction="column" flex={1}>
                         <Text mt={5} mb={2}>
