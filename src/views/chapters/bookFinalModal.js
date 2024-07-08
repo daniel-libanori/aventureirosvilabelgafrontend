@@ -41,7 +41,7 @@ export function BookFinalModal({ isOpen, onOpen, onClose, book }) {
           </Text>
           <Text mb={5}>Agora adicione o epílogo do seu livro.</Text>
           <Textarea
-            placeholder="Insira aqui o final do seu capítulo..."
+            placeholder="Insira aqui o epílogo do seu livro..."
             value={final}
             onChange={(e) => setFinal(e.target.value)}
             height={400}

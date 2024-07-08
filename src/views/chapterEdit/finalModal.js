@@ -43,7 +43,7 @@ export function FinalModal({ isOpen, onOpen, onClose, chapterData }) {
         <ModalCloseButton />
         <ModalBody>
           <Text mb={5} fontStyle="italic" fontWeight={300}>
-            A final do capítulo será o texto que irá aparecer após o fim desse
+            O final do capítulo será o texto que irá aparecer após o fim desse
             capítulo, nele você pode escrever falando sobre o que aconteceu após
             o desfecho do capítulo, ou até mesmo fazer uma prévia do que está
             por vir no próximo capítulo.

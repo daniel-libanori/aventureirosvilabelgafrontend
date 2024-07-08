@@ -464,7 +464,7 @@ export function AddExplorationPointModal({
               {expPointEnemyOrPerson === "expPoint"
                 ? "Ponto de Exploração"
                 : expPointEnemyOrPerson === "person"
-                ? "Dialogo com Pessoa"
+                ? "Diálogo com Pessoa"
                 : "Inimigo"}
             </ModalHeader>
             <ModalCloseButton />
@@ -572,12 +572,10 @@ export function AddExplorationPointModal({
                         fontStyle="italic"
                         fontSize={14}
                       >
-                        ficha
+                        marcador
                       </Text>
-                      ) será inserido nessa posição no mapa e para identificar a
-                      seção que será lida ao chegar nesse ponto no mapa.
-                      Preencher com a identificação da ficha . Por exemplo: E01,
-                      E02, E03, etc.
+                      ) será inserida nessa posição no mapa. Preencher com a
+                      identificação da ficha. Por exemplo: E01, E02, E03, etc.
                     </Text>
                   </Flex>
 
@@ -699,7 +697,7 @@ export function AddExplorationPointModal({
                           <Text as="span" fontWeight={500}>
                             Apenas Texto
                           </Text>{" "}
-                          - Seção que contém apenas o texto das aba de
+                          - Seção que contém apenas o texto da aba de
                           informações básicas. <br />
                           <Text as="span" fontWeight={500}>
                             Desafio de Rolagem Individual
@@ -716,7 +714,7 @@ export function AddExplorationPointModal({
                           <Text as="span" fontWeight={500}>
                             Desafio Individual Customizado
                           </Text>{" "}
-                          - Desafio individual que não segue a mecanica padrão
+                          - Desafio individual que não segue a mecânica padrão
                           de rolagem de dados.
                         </Text>
                       </Flex>
@@ -892,7 +890,11 @@ export function AddExplorationPointModal({
                               min={1}
                               step={1}
                               max={diceAmount}
-                              value={diceSuccessAmout}
+                              value={
+                                explorationPointType === "individual-challange"
+                                  ? diceSuccessAmout
+                                  : undefined
+                              }
                               onChange={(e) => setDiceSuccessAmout(e)}
                               w={50}
                               mr={3}
@@ -914,20 +916,20 @@ export function AddExplorationPointModal({
                             fontSize={14}
                             fontStyle="italic"
                           >
-                            Selecione as variaveis para o desafio de rolagem de
+                            Selecione as variáveis para o desafio de rolagem de
                             acordo com o tipo da seção: <br /> <br />
                             <Text as="span" fontWeight={500}>
                               Desafio de Rolagem Individual
                             </Text>{" "}
-                            - Certifique-se que a{" "}
+                            - Certifique-se de que a{" "}
                             <Text as="span" fontWeight={500}>
                               quantidade de dados
                             </Text>{" "}
-                            seja maior que a quantidade de{" "}
+                            seja maior que a{" "}
                             <Text as="span" fontWeight={500}>
                               quantidade de dados com valor mínimo para o
                               sucesso
-                            </Text>{" "}
+                            </Text>
                             , pois se não o desafio será impossível de ser
                             vencido.
                             <br />
@@ -939,11 +941,11 @@ export function AddExplorationPointModal({
                             <Text as="span" fontWeight={500}>
                               quantidade de dados
                             </Text>{" "}
-                            seja menor que a quantidade de{" "}
+                            seja menor que a{" "}
                             <Text as="span" fontWeight={500}>
                               quantidade de dados com valor mínimo para o
                               sucesso
-                            </Text>{" "}
+                            </Text>
                             , pois o desafio em grupo pode ser resolvido em mais
                             de uma rodada.
                           </Text>
@@ -983,7 +985,7 @@ export function AddExplorationPointModal({
                         >
                           O texto de sucesso é exibido ao jogador quando ele
                           completar o desafio de rolagem de dados ou vencer
-                          inimigos. Nele você pode colocar dialogos da história,
+                          inimigos. Nele você pode colocar diálogos da história,
                           recompensas e etc.
                         </Text>
                       </Flex>
@@ -1018,9 +1020,9 @@ export function AddExplorationPointModal({
                         O texto de fracasso é exibido ao jogador caso ele perca
                         o desafio de rolagem de dados individual (caso o jogador
                         perca para inimigos ele irá apenas desmaiar e para
-                        desafios de rolagem em grupo, não há como o jogador
-                        fracassar). Nele você pode colocar dialogos da história,
-                        recompensas (ou penalidades) e etc.
+                        desafios de rolagem em grupo não há como o jogador
+                        fracassar). Nele você pode colocar diálogos da história,
+                        recompensas (ou penalidades), etc.
                       </Text>
                     </Flex>
                   )}
@@ -1031,8 +1033,8 @@ export function AddExplorationPointModal({
                 <Flex mt={5}>
                   <Flex direction="column" flex={1}>
                     <Text mb={2}>
-                      Selecione a seção que será pré-requisito para esse liberar
-                      essa seção:
+                      Selecione a seção que será pré-requisito para liberar essa
+                      seção:
                     </Text>
                     <Flex
                       overflow="auto"
@@ -1105,14 +1107,10 @@ export function AddExplorationPointModal({
                     fontWeight={300}
                     fontSize={14}
                   >
-                    Ao lado há uma lista de todos as seções que já foram criadas
-                    no seu capítulo. Você pode selecionar uma seção para que
-                    quando ele for completa, a seção que você está criando seja
-                    liberada. <br /> <br />
-                    Por exemplo: Caso eu selecione uma seção chamada "A" como
-                    pré-requisito para a seção que estou criando, a seção que
-                    estou criando só será liberada quando a seção "A" for
-                    completa.
+                    Ao lado há uma lista de todas as seções que já foram criadas
+                    no seu capítulo. Você pode selecionar uma seção para que,
+                    apenas quando ela for completada, a seção que você está
+                    criando seja liberada.
                   </Text>
                 </Flex>
               )}

@@ -265,6 +265,10 @@ export function ChapterEdit() {
                 Clique em qualquer espaço do mapa para iniciar
               </Text>{" "}
               ou em um ponto já existente para editá-lo ou excluí-lo.
+              <br />
+              <br />O texto de preparação do capítulo será gerado
+              automaticamente com base nas seções adicionadas. Você deve apenas
+              definir o ponto inicial dos jogadores no mapa.
             </Text>
           </Flex>
 

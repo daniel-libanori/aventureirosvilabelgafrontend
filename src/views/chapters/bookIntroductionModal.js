@@ -47,7 +47,7 @@ export function BookIntroductionModal({ isOpen, onOpen, onClose, book }) {
           </Text>
           <Text mb={5}>Adicione o texto de prólogo do seu livro.</Text>
           <Textarea
-            placeholder="Insira aqui a introdução do seu capítulo..."
+            placeholder="Insira aqui o prólogo do seu livro..."
             value={introduction}
             onChange={(e) => setIntroduction(e.target.value)}
             height={400}

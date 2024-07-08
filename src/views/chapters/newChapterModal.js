@@ -70,7 +70,7 @@ export function NewChapterModal({
           {creationStep === 1 && type === "add" && (
             <>
               <Text>
-                Todo bom livro, tem capítulos, não é mesmo? Vamos criar juntos
+                Todo bom livro tem capítulos, não é mesmo? Vamos criar juntos
                 esse novo capítulo!
               </Text>
               <Text mt={5}>Qual será o título desse capítulo?</Text>

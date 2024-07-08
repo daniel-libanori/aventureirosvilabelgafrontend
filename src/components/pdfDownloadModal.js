@@ -22,7 +22,7 @@ export function PdfDownloadModalModal({ isOpen, onOpen, onClose }) {
         <ModalCloseButton />
         <ModalBody>
           <Text textAlign="center">
-            Por favor avalie como foi a sua experiência com a plataforma. Isso
+            Por favor, avalie como foi a sua experiência com a plataforma. Isso
             irá nos ajudar a melhorar cada vez mais. E nos ajudará a avaliar o
             projeto.
           </Text>
