@@ -40,6 +40,8 @@ import { MdModeEditOutline } from "react-icons/md";
 import { FinalModal } from "../chapterEdit/finalModal";
 import { ChapterNameModal } from "../chapterEdit/chapterNameModal";
 import { LuText } from "react-icons/lu";
+import { getPdf } from "../../api/pdfAPI";
+import { PdfDownloadModalModal } from "../../components/pdfDownloadModal";
 
 export function Chapter() {
   const { isOpen, onOpen, onClose } = useDisclosure(); //IntroductionModal
@@ -76,6 +78,12 @@ export function Chapter() {
   const [selectedExplorationPoint, setSelectedExplorationPoint] = useState({});
   const [updateOrAddExpPointModalType, setUpdateOrAddExpPointModalType] =
     useState("add"); //add or update
+
+  const {
+    isOpen: isOpenPdf,
+    onOpen: onOpenPdf,
+    onClose: onClosePdf,
+  } = useDisclosure();
 
   useLayoutEffect(() => {
     getData();
@@ -119,6 +127,14 @@ export function Chapter() {
     return (y - 1) * numColumns + x;
   }
 
+  const generatePDF = async (bookId) => {
+    const response = await getPdf(bookId);
+    const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url);
+    onOpenPdf();
+  };
+
   return (
     <Background editchapter>
       <Header />
@@ -144,6 +160,13 @@ export function Chapter() {
           onOpen={onOpenChapterName}
           onClose={onCloseChapterName}
           chapterData={chapterData}
+        />
+      )}
+      {isOpenPdf && (
+        <PdfDownloadModalModal
+          isOpen={isOpenPdf}
+          onOpen={onOpenPdf}
+          onClose={onClosePdf}
         />
       )}
       <HelpModal
@@ -311,6 +334,16 @@ export function Chapter() {
                 <Icon as={MdModeEditOutline} mr={5} w={10} h={10} />
                 <Flex direction="column" justify="center">
                   <Text fontSize="2xl">Ir para mapa de edição de seções</Text>
+                </Flex>
+              </CreateUpdateIntroductionButton>
+
+              <CreateUpdateIntroductionButton
+                onClick={() => generatePDF(bookId)}
+                bgColor={"#ff5e5e"}
+                borderColor={"#f03737"}
+              >
+                <Flex direction="column" justify="center">
+                  <Text fontSize="xl">Gerar Arquivo PDF do Livro</Text>
                 </Flex>
               </CreateUpdateIntroductionButton>
             </Flex>

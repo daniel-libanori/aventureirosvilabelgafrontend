@@ -31,6 +31,8 @@ import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { BookIntroductionModal } from "./bookIntroductionModal";
 import { BookFinalModal } from "./bookFinalModal";
+import { getPdf } from "../../api/pdfAPI";
+import { PdfDownloadModalModal } from "../../components/pdfDownloadModal";
 
 export function Chapters() {
   const { isOpen, onOpen, onClose } = useDisclosure(); //NewChapterModal
@@ -53,6 +55,11 @@ export function Chapters() {
     isOpen: isOpenFinal,
     onOpen: onOpenFinal,
     onClose: onCloseFinal,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenPdf,
+    onOpen: onOpenPdf,
+    onClose: onClosePdf,
   } = useDisclosure();
   const [helpDataKey, setHelpDataKey] = useState("");
   const navigate = useNavigate();
@@ -87,6 +94,14 @@ export function Chapters() {
     navigate(0);
   };
 
+  const generatePDF = async (bookId) => {
+    const response = await getPdf(bookId);
+    const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url);
+    onOpenPdf();
+  };
+
   return (
     <Background mediumSize>
       <Header />
@@ -118,6 +133,14 @@ export function Chapters() {
           book={book}
         />
       )}
+      {isOpenPdf && (
+        <PdfDownloadModalModal
+          isOpen={isOpenPdf}
+          onOpen={onOpenPdf}
+          onClose={onClosePdf}
+        />
+      )}
+
       <HelpModal
         isOpen={isOpenHelp}
         onOpen={onOpenHelp}
@@ -263,6 +286,15 @@ export function Chapters() {
                   <Text fontSize="xl">Adicionar/ Editar epílogo do Livro</Text>
                 </Flex>
               </CreateUpdateIntroductionButton>
+              <CreateUpdateIntroductionButton
+                onClick={() => generatePDF(book.id)}
+                bgColor={"#ff5e5e"}
+                borderColor={"#f03737"}
+              >
+                <Flex direction="column" justify="center">
+                  <Text fontSize="xl">Gerar Arquivo PDF do Livro</Text>
+                </Flex>
+              </CreateUpdateIntroductionButton>
             </Flex>
 
             <Flex direction="column" w={"-webkit-fill-available"}>
@@ -352,12 +384,12 @@ export function Chapters() {
           pb={0.5}
           color={"#888"}
         >
-          <Text fontStyle={"italic"}>
+          {/* <Text fontStyle={"italic"}>
             Avalie a nossa plataforma:{" "}
             <Link href="https://forms.gle/DYmw3VJEa4qnPvgDA" isExternal>
               Clique Aqui
             </Link>
-          </Text>
+          </Text> */}
         </Flex>
       </Card>
     </Background>
